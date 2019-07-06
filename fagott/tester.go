@@ -31,6 +31,9 @@ func testRequest(t *testing.T, req *http.Request, service *Service, route *Route
 	if tester.Header != nil {
 		testHeader(t, req, service, route)
 	}
+	if tester.Query != nil {
+		testQuery(t, req, service, route)
+	}
 	if tester.Test != nil {
 		tester.Test(t, req, service, route)
 	}
@@ -150,24 +153,38 @@ func testHeader(t *testing.T, req *http.Request, service *Service, route *Route)
 	srv := service.Endpoint
 
 	for k, v := range route.Tester.Header {
-		if v == nil {
-			if _, ok := req.Header[k]; !ok {
-				assert.Fail(
-					t, makeMsg(
-						`the following request header is required: `+k, srv, reqName))
-				return
-			}
-		} else {
-			a, ok := req.Header[k]
-			if !ok {
-				assert.Fail(
-					t, makeMsg(
-						"the following request header is required: "+k, srv, reqName))
-				return
-			}
+		a, ok := req.Header[k]
+		if !ok {
+			assert.Fail(
+				t, makeMsg(
+					"the following request header is required: "+k, srv, reqName))
+			return
+		}
+		if v != nil {
 			assert.Equal(
 				t, v, a,
 				makeMsg(fmt.Sprintf(`the request header "%s" should match`, k), srv, reqName))
+		}
+	}
+}
+
+func testQuery(t *testing.T, req *http.Request, service *Service, route *Route) {
+	reqName := route.Name
+	srv := service.Endpoint
+
+	query := req.URL.Query()
+	for k, v := range route.Tester.Query {
+		a, ok := query[k]
+		if !ok {
+			assert.Fail(
+				t, makeMsg(
+					"the following request query is required: "+k, srv, reqName))
+			return
+		}
+		if v != nil {
+			assert.Equal(
+				t, v, a,
+				makeMsg(fmt.Sprintf(`the request query "%s" should match`, k), srv, reqName))
 		}
 	}
 }

@@ -22,7 +22,8 @@ func Test_testRequest(t *testing.T) {
 			req: &http.Request{
 				Method: "POST",
 				URL: &url.URL{
-					Path: "/users",
+					Path:     "/users",
+					RawQuery: "name=foo",
 				},
 				Body: ioutil.NopCloser(strings.NewReader(`{
 				  "name": "foo",
@@ -43,6 +44,9 @@ func Test_testRequest(t *testing.T) {
 					}`,
 					Header: http.Header{
 						"Authorization": []string{"token XXXXX"},
+					},
+					Query: url.Values{
+						"name": []string{"foo"},
 					},
 					Test: func(t *testing.T, req *http.Request, service *Service, route *Route) {},
 				},
@@ -289,6 +293,38 @@ func Test_testHeader(t *testing.T) {
 	for _, d := range data {
 		t.Run(d.title, func(t *testing.T) {
 			testHeader(t, d.req, d.service, d.route)
+		})
+	}
+}
+
+func Test_testQuery(t *testing.T) {
+	data := []struct {
+		title   string
+		req     *http.Request
+		service *Service
+		route   *Route
+	}{
+		{
+			title: "normal",
+			req: &http.Request{
+				URL: &url.URL{
+					RawQuery: "name=foo",
+				},
+			},
+			service: &Service{},
+			route: &Route{
+				Tester: &Tester{
+					Query: url.Values{
+						"name": []string{"foo"},
+					},
+				},
+			},
+		},
+	}
+
+	for _, d := range data {
+		t.Run(d.title, func(t *testing.T) {
+			testQuery(t, d.req, d.service, d.route)
 		})
 	}
 }
