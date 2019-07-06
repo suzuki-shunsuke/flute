@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -83,7 +84,7 @@ func testMethod(t *testing.T, req *http.Request, service *Service, route *Route)
 	tester := route.Tester
 
 	assert.Equal(
-		t, tester.Method, req.Method,
+		t, strings.ToUpper(tester.Method), strings.ToUpper(req.Method),
 		makeMsg("request method should match", srv, reqName))
 }
 
