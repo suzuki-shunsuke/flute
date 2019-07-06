@@ -12,11 +12,11 @@ func NewTransport(server *Server) *Transport {
 
 func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	for _, service := range transport.server.Services {
-		if !IsMatchService(req, &service) {
+		if !isMatchService(req, &service) {
 			continue
 		}
 		for _, route := range service.Routes {
-			b, err := IsMatch(req, route.Matcher)
+			b, err := isMatch(req, route.Matcher)
 			if err != nil {
 				return &http.Response{
 					Request:    req,
@@ -27,9 +27,9 @@ func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error)
 				continue
 			}
 			// test
-			transport.Test(req, &service, &route)
+			testRequest(transport.server.T, req, &service, &route)
 			// return response
-			return CreateHTTPResponse(req, route.Response)
+			return createHTTPResponse(req, route.Response)
 		}
 	}
 	// there is no match response

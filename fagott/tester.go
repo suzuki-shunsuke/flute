@@ -5,29 +5,30 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func (transport *Transport) Test(req *http.Request, service *Service, route *Route) {
+func testRequest(t *testing.T, req *http.Request, service *Service, route *Route) {
 	tester := route.Tester
 	if tester.Path != "" {
-		transport.testPath(req, service, route)
+		testPath(t, req, service, route)
 	}
 	if tester.Method != "" {
-		transport.testMethod(req, service, route)
+		testMethod(t, req, service, route)
 	}
 	if tester.BodyString != "" {
-		transport.testBodyString(req, service, route)
+		testBodyString(t, req, service, route)
 	}
 	if tester.BodyJSON != nil {
-		transport.testBodyJSON(req, service, route)
+		testBodyJSON(t, req, service, route)
 	}
 	if tester.Header != nil {
-		transport.testHeader(req, service, route)
+		testHeader(t, req, service, route)
 	}
 	if tester.Test != nil {
-		tester.Test(transport.server.T, req, service, route)
+		tester.Test(t, req, service, route)
 	}
 }
 
@@ -37,10 +38,9 @@ service: %s
 request name: %s`, msg, srv, reqName)
 }
 
-func (transport *Transport) testBodyString(
-	req *http.Request, service *Service, route *Route,
+func testBodyString(
+	t *testing.T, req *http.Request, service *Service, route *Route,
 ) {
-	t := transport.server.T
 	reqName := route.Name
 	srv := service.Endpoint
 	tester := route.Tester
@@ -64,8 +64,7 @@ func (transport *Transport) testBodyString(
 		makeMsg("request body should match", srv, reqName))
 }
 
-func (transport *Transport) testPath(req *http.Request, service *Service, route *Route) {
-	t := transport.server.T
+func testPath(t *testing.T, req *http.Request, service *Service, route *Route) {
 	reqName := route.Name
 	srv := service.Endpoint
 	tester := route.Tester
@@ -75,8 +74,7 @@ func (transport *Transport) testPath(req *http.Request, service *Service, route 
 		makeMsg("request path should match", srv, reqName))
 }
 
-func (transport *Transport) testMethod(req *http.Request, service *Service, route *Route) {
-	t := transport.server.T
+func testMethod(t *testing.T, req *http.Request, service *Service, route *Route) {
 	reqName := route.Name
 	srv := service.Endpoint
 	tester := route.Tester
@@ -86,8 +84,7 @@ func (transport *Transport) testMethod(req *http.Request, service *Service, rout
 		makeMsg("request method should match", srv, reqName))
 }
 
-func (transport *Transport) testBodyJSON(req *http.Request, service *Service, route *Route) {
-	t := transport.server.T
+func testBodyJSON(t *testing.T, req *http.Request, service *Service, route *Route) {
 	reqName := route.Name
 	srv := service.Endpoint
 	tester := route.Tester
@@ -118,8 +115,7 @@ func (transport *Transport) testBodyJSON(req *http.Request, service *Service, ro
 		makeMsg("request body should match", srv, reqName))
 }
 
-func (transport *Transport) testHeader(req *http.Request, service *Service, route *Route) {
-	t := transport.server.T
+func testHeader(t *testing.T, req *http.Request, service *Service, route *Route) {
 	reqName := route.Name
 	srv := service.Endpoint
 	tester := route.Tester

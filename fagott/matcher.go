@@ -9,11 +9,15 @@ import (
 	"github.com/suzuki-shunsuke/go-jsoneq/jsoneq"
 )
 
-func IsMatchService(req *http.Request, service *Service) bool {
+// isMatchService returns whether the request matches with the service.
+// isMatchService checks the request URL.Scheme and URL.Host are equal to the service endpoint.
+func isMatchService(req *http.Request, service *Service) bool {
 	return req.URL.Scheme+"://"+req.URL.Host == service.Endpoint
 }
 
-func IsMatch(req *http.Request, matcher *Matcher) (bool, error) {
+// isMatch returns whether the request matches with the matcher.
+// If the matcher has multiple conditions, IsMatch returns true if the request meets all conditions.
+func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
 	if matcher.Path != "" {
 		if matcher.Path != req.URL.Path {
 			return false, nil
