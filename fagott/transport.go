@@ -4,6 +4,8 @@ import (
 	"net/http"
 )
 
+// RoundTrip implements http.RoundTripper.
+// RoundTrip traverses the matched route and run the test and returns response.
 func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	for _, service := range transport.Services {
 		if !isMatchService(req, &service) {

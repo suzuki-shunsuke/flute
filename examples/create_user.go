@@ -13,6 +13,7 @@ type (
 		Token    string
 	}
 
+	// User is a User
 	User struct {
 		ID    int    `json:"id,omitempty"`
 		Name  string `json:"name"`
@@ -20,6 +21,7 @@ type (
 	}
 )
 
+// CreateUser create a user.
 func (client *Client) CreateUser(user *User) (*User, *http.Response, error) {
 	c := &http.Client{}
 	if client.ClientFn != nil {
