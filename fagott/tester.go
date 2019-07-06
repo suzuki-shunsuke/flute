@@ -150,21 +150,14 @@ func testHeader(t *testing.T, req *http.Request, service *Service, route *Route)
 	srv := service.Endpoint
 
 	for k, v := range route.Tester.Header {
-		if v == nil {
-			if _, ok := req.Header[k]; !ok {
-				assert.Fail(
-					t, makeMsg(
-						`the following request header is required: `+k, srv, reqName))
-				return
-			}
-		} else {
-			a, ok := req.Header[k]
-			if !ok {
-				assert.Fail(
-					t, makeMsg(
-						"the following request header is required: "+k, srv, reqName))
-				return
-			}
+		a, ok := req.Header[k]
+		if !ok {
+			assert.Fail(
+				t, makeMsg(
+					"the following request header is required: "+k, srv, reqName))
+			return
+		}
+		if v != nil {
 			assert.Equal(
 				t, v, a,
 				makeMsg(fmt.Sprintf(`the request header "%s" should match`, k), srv, reqName))
