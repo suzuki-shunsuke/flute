@@ -53,7 +53,7 @@ type (
 
 	// Tester has the request's tests.
 	Tester struct {
-		Test func(*testing.T, *http.Request, *Service, *Route) (bool, error)
+		Test func(*testing.T, *http.Request, *Service, *Route)
 		// Path is the request path.
 		Path string
 		// Path is the request method such as "GET".

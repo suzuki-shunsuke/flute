@@ -10,6 +10,81 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func Test_testRequest(t *testing.T) {
+	data := []struct {
+		title   string
+		req     *http.Request
+		service *Service
+		route   *Route
+	}{
+		{
+			title: "body json string",
+			req: &http.Request{
+				Method: "POST",
+				URL: &url.URL{
+					Path: "/users",
+				},
+				Body: ioutil.NopCloser(strings.NewReader(`{
+				  "name": "foo",
+				  "email": "foo@example.com"
+				}`)),
+				Header: http.Header{
+					"Authorization": []string{"token XXXXX"},
+				},
+			},
+			service: &Service{},
+			route: &Route{
+				Tester: &Tester{
+					Method: "POST",
+					Path:   "/users",
+					BodyJSONString: `{
+					  "name": "foo",
+					  "email": "foo@example.com"
+					}`,
+					Header: http.Header{
+						"Authorization": []string{"token XXXXX"},
+					},
+					Test: func(t *testing.T, req *http.Request, service *Service, route *Route) {},
+				},
+			},
+		},
+		{
+			title: "body string",
+			req: &http.Request{
+				Body: ioutil.NopCloser(strings.NewReader(`foo`)),
+			},
+			service: &Service{},
+			route: &Route{
+				Tester: &Tester{
+					BodyString: `foo`,
+				},
+			},
+		},
+		{
+			title: "body json",
+			req: &http.Request{
+				Body: ioutil.NopCloser(strings.NewReader(`[{"name": "foo"}]`)),
+			},
+			service: &Service{},
+			route: &Route{
+				Tester: &Tester{
+					BodyJSON: []map[string]interface{}{
+						{
+							"name": "foo",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, d := range data {
+		t.Run(d.title, func(t *testing.T) {
+			testRequest(t, d.req, d.service, d.route)
+		})
+	}
+}
+
 func Test_makeMsg(t *testing.T) {
 	data := []struct {
 		title   string
