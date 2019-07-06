@@ -228,7 +228,7 @@ func Test_isMatchHeader(t *testing.T) {
 			},
 		},
 		{
-			title: "header isn't found (nil)",
+			title: "header isn't found",
 			req: &http.Request{
 				Header: http.Header{},
 			},
