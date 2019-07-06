@@ -29,7 +29,9 @@ func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error)
 				continue
 			}
 			// test
-			testRequest(transport.t, req, &service, &route)
+			if transport.t != nil {
+				testRequest(transport.t, req, &service, &route)
+			}
 			// return response
 			return createHTTPResponse(req, route.Response)
 		}
