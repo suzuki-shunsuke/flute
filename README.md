@@ -23,7 +23,6 @@ For example, The following test fails because the required request header "FOO" 
 ```go
 func TestBar(t *testing.T) {
 	srv := &fagott.Server{
-		T: t,
 		Services: []fagott.Service{
 			{
 				Endpoint: "http://hello.example.com",
@@ -52,7 +51,7 @@ func TestBar(t *testing.T) {
 	}
 
 	client := &http.Client{
-		Transport: fagott.NewTransport(srv),
+		Transport: fagott.NewTransport(t, srv),
 	}
 	req, err := http.NewRequest("GET", "http://hello.example.com/foo", nil)
 	if err != nil {
@@ -91,8 +90,8 @@ $ go test -v ./... -covermode=atomic
 ```go
 client := &http.Client{
 	Transport: fagott.NewTransport(
+		t,
 		&fagott.Server{
-			T: t,
 			Services: []fagott.Service{
 				{
 					Endpoint: "http://hello.example.com",
@@ -127,8 +126,8 @@ defer func(transport http.RoundTripper) {
 	http.DefaultClient.Transport = transport
 }(http.DefaultClient.Transport)
 http.DefaultClient.Transport = fagott.NewTransport(
+	t,
 	&fagott.Server{
-		T: t,
 		Services: []fagott.Service{
 			{
 				Endpoint: "http://hello.example.com",

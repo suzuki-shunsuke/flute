@@ -32,6 +32,13 @@ steps:
   image: quay.io/suzuki_shunsuke/durl:1.0.0
   commands:
   - sh scripts/durl.sh
+- name: download go modules
+  image: &image_go golang:1.12.6
+  commands:
+  - go mod download
+  environment:
+    GO111MODULE: on
+    GOPATH: /go
 - name: golangci-lint
   image: golangci/golangci-lint:v1.17.1
   commands:
@@ -43,7 +50,7 @@ steps:
   image: golang:1.12.6
   commands:
   # bash and cgo seem to be required
-  - go test -race -coverprofile=coverage.out -covermode=atomic .
+  - bash scripts/codecov-test.sh
   - curl -s https://codecov.io/bash > /tmp/codecov.sh
   - test "$LOCAL" = "true" -o "$DRONE_BUILD_EVENT" = "pull_request" || bash /tmp/codecov.sh
   environment:

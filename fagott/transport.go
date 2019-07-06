@@ -2,11 +2,13 @@ package fagott
 
 import (
 	"net/http"
+	"testing"
 )
 
-func NewTransport(server *Server) *Transport {
+func NewTransport(t *testing.T, server *Server) *Transport {
 	return &Transport{
 		server: server,
+		t:      t,
 	}
 }
 
@@ -27,7 +29,7 @@ func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error)
 				continue
 			}
 			// test
-			testRequest(transport.server.T, req, &service, &route)
+			testRequest(transport.t, req, &service, &route)
 			// return response
 			return createHTTPResponse(req, route.Response)
 		}

@@ -12,7 +12,6 @@ import (
 
 func TestFoo(t *testing.T) {
 	srv := &fagott.Server{
-		T: t,
 		Services: []fagott.Service{
 			{
 				Endpoint: "http://example.com",
@@ -39,7 +38,7 @@ func TestFoo(t *testing.T) {
 	defer func(transport http.RoundTripper) {
 		http.DefaultClient.Transport = transport
 	}(http.DefaultClient.Transport)
-	http.DefaultClient.Transport = fagott.NewTransport(srv)
+	http.DefaultClient.Transport = fagott.NewTransport(t, srv)
 	r, err := http.Get("http://example.com/foo")
 	if err != nil {
 		log.Fatal(err)
@@ -54,7 +53,6 @@ func TestFoo(t *testing.T) {
 
 func TestBar(t *testing.T) {
 	srv := &fagott.Server{
-		T: t,
 		Services: []fagott.Service{
 			{
 				Endpoint: "http://hello.example.com",
@@ -80,7 +78,7 @@ func TestBar(t *testing.T) {
 	}
 
 	client := &http.Client{
-		Transport: fagott.NewTransport(srv),
+		Transport: fagott.NewTransport(t, srv),
 	}
 	req, err := http.NewRequest("GET", "http://hello.example.com/foo", nil)
 	if err != nil {

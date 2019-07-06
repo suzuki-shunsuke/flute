@@ -1,0 +1,8 @@
+---
+# configuration file of durl, which is a CLI tool to check whether broken urls are included in files.
+# https://github.com/suzuki-shunsuke/durl
+ignore_urls:
+- https://codecov.io/bash  # sometimes returns 503
+ignore_hosts:
+- hello.example.com
+max_failed_request_count: -1
