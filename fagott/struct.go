@@ -8,18 +8,22 @@ import (
 type (
 	// Transport implements http.RoundTripper.
 	Transport struct {
+		// Each service's endpoint should be unique.
 		Services []Service
-		T        *testing.T
+		// If *testing.T is nil, the transport is a just mock and doesn't run the test.
+		T *testing.T
 		// Transport is used when the request doesn't match with any services.
 		Transport http.RoundTripper
 	}
 
+	// Service is a service.
 	Service struct {
 		// The format of Endpoint should be "scheme://host", and other parameters
 		// such as path and queries shouldn't be set.
 		// These parameters should be set at the matcher or tester.
 		Endpoint string
-		Routes   []Route
+		// If the request matches with a route, other routes are ignored.
+		Routes []Route
 	}
 
 	// Route is the pair of the macher, tester, and response.
