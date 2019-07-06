@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"reflect"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/suzuki-shunsuke/go-jsoneq/jsoneq"
@@ -24,7 +25,7 @@ func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
 		}
 	}
 	if matcher.Method != "" {
-		if matcher.Method != req.Method {
+		if strings.ToUpper(matcher.Method) != strings.ToUpper(req.Method) {
 			return false, nil
 		}
 	}

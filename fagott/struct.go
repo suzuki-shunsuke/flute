@@ -8,14 +8,10 @@ import (
 type (
 	// Transport implements http.RoundTripper.
 	Transport struct {
-		server *Server
-		t      *testing.T
+		Services []Service
+		T        *testing.T
 		// Transport is used when the request doesn't match with any services.
 		Transport http.RoundTripper
-	}
-
-	Server struct {
-		Services []Service
 	}
 
 	Service struct {
