@@ -1,0 +1,9 @@
+---
+items:
+- src:
+    package: net/http
+    interface: RoundTripper
+    name: MockRoundTripper
+  dest:
+    package: fagott
+    file: fagott/mock_round_tripper_test.go

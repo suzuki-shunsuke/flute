@@ -36,6 +36,34 @@ request name: create a user`,
 	}
 }
 
+func Test_testBodyString(t *testing.T) {
+	data := []struct {
+		title   string
+		req     *http.Request
+		service *Service
+		route   *Route
+	}{
+		{
+			title: "normal",
+			req: &http.Request{
+				Body: ioutil.NopCloser(strings.NewReader(`"foo"`)),
+			},
+			service: &Service{},
+			route: &Route{
+				Tester: &Tester{
+					BodyString: `"foo"`,
+				},
+			},
+		},
+	}
+
+	for _, d := range data {
+		t.Run(d.title, func(t *testing.T) {
+			testBodyString(t, d.req, d.service, d.route)
+		})
+	}
+}
+
 func Test_testPath(t *testing.T) {
 	data := []struct {
 		title   string

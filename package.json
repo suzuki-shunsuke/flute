@@ -7,6 +7,7 @@
     "lint": "golangci-lint run",
     "c": "bash scripts/coverage.sh",
     "tag": "bash scripts/tag.sh",
+    "mock": "gomic gen && npm run fmt",
     "durl": "bash scripts/durl.sh",
     "ci-local": "time drone exec --pipeline build --env-file scripts/drone-local-env --event pull_request"
   },
