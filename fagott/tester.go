@@ -24,6 +24,9 @@ func testRequest(t *testing.T, req *http.Request, service *Service, route *Route
 	if tester.BodyJSON != nil {
 		testBodyJSON(t, req, service, route)
 	}
+	if tester.BodyJSONString != "" {
+		testBodyJSONString(t, req, service, route)
+	}
 	if tester.Header != nil {
 		testHeader(t, req, service, route)
 	}
@@ -111,14 +114,39 @@ func testBodyJSON(t *testing.T, req *http.Request, service *Service, route *Rout
 		return
 	}
 	assert.JSONEqf(
-		t, string(b), string(c),
+		t, string(c), string(b),
+		makeMsg("request body should match", srv, reqName))
+}
+
+func testBodyJSONString(
+	t *testing.T, req *http.Request, service *Service, route *Route,
+) {
+	reqName := route.Name
+	srv := service.Endpoint
+	tester := route.Tester
+
+	if req.Body == nil {
+		assert.Equal(
+			t, tester.BodyString, nil,
+			makeMsg("request body should match", srv, reqName))
+		return
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		assert.Fail(
+			t, makeMsg(
+				fmt.Sprintf("failed to read the request body: %v", err),
+				srv, reqName))
+		return
+	}
+	assert.JSONEqf(
+		t, tester.BodyJSONString, string(b),
 		makeMsg("request body should match", srv, reqName))
 }
 
 func testHeader(t *testing.T, req *http.Request, service *Service, route *Route) {
 	reqName := route.Name
 	srv := service.Endpoint
-	tester := route.Tester
 
 	for k, v := range route.Tester.Header {
 		if v == nil {
@@ -141,29 +169,4 @@ func testHeader(t *testing.T, req *http.Request, service *Service, route *Route)
 				makeMsg(fmt.Sprintf(`the request header "%s" should match`, k), srv, reqName))
 		}
 	}
-
-	if req.Body == nil {
-		assert.Equal(
-			t, tester.BodyJSON, nil,
-			makeMsg("request body should match", srv, reqName))
-		return
-	}
-	b, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		assert.Fail(
-			t, makeMsg(
-				fmt.Sprintf("failed to read the request body: %v", err), srv, reqName))
-		return
-	}
-	c, err := json.Marshal(tester.BodyJSON)
-	if err != nil {
-		assert.Fail(
-			t, makeMsg(
-				fmt.Sprintf("failed to parse tester.bodyJSON as JSON: %v", err),
-				srv, reqName))
-		return
-	}
-	assert.JSONEqf(
-		t, string(b), string(c),
-		makeMsg("request body should match", srv, reqName))
 }

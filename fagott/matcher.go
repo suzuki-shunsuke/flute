@@ -40,6 +40,12 @@ func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
 			return f, err
 		}
 	}
+	if matcher.BodyJSONString != "" {
+		f, err := isMatchBodyJSONString(req, matcher)
+		if err != nil || !f {
+			return f, err
+		}
+	}
 	if matcher.Header != nil {
 		for k, v := range matcher.Header {
 			if v == nil {
@@ -78,6 +84,17 @@ func isMatchBodyString(req *http.Request, matcher *Matcher) (bool, error) {
 		return false, nil
 	}
 	return true, nil
+}
+
+func isMatchBodyJSONString(req *http.Request, matcher *Matcher) (bool, error) {
+	if req.Body == nil {
+		return false, nil
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		return false, errors.Wrap(err, "failed to read the request body")
+	}
+	return jsoneq.Equal(b, []byte(matcher.BodyJSONString))
 }
 
 func isMatchBodyJSON(req *http.Request, matcher *Matcher) (bool, error) {
