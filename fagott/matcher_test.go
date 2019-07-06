@@ -141,6 +141,71 @@ func Test_isMatch(t *testing.T) {
 	}
 }
 
+func Test_isMatchQuery(t *testing.T) {
+	data := []struct {
+		title   string
+		req     *http.Request
+		matcher *Matcher
+		isErr   bool
+		exp     bool
+	}{
+		{
+			title: "header value doesn't match",
+			req: &http.Request{
+				URL: &url.URL{
+					RawQuery: "name=foo",
+				},
+			},
+			matcher: &Matcher{
+				Query: url.Values{
+					"name": []string{"bar"},
+				},
+			},
+		},
+		{
+			title: "query isn't found",
+			req: &http.Request{
+				URL: &url.URL{},
+			},
+			matcher: &Matcher{
+				Query: url.Values{
+					"name": nil,
+				},
+			},
+		},
+		{
+			title: "query matches",
+			req: &http.Request{
+				URL: &url.URL{
+					RawQuery: "name=foo",
+				},
+			},
+			matcher: &Matcher{
+				Query: url.Values{
+					"name": []string{"foo"},
+				},
+			},
+			exp: true,
+		},
+	}
+
+	for _, d := range data {
+		t.Run(d.title, func(t *testing.T) {
+			b, err := isMatchQuery(d.req, d.matcher)
+			if d.isErr {
+				require.NotNil(t, err)
+				return
+			}
+			require.Nil(t, err)
+			if d.exp {
+				require.True(t, b)
+				return
+			}
+			require.False(t, b)
+		})
+	}
+}
+
 func Test_isMatchHeader(t *testing.T) {
 	data := []struct {
 		title   string

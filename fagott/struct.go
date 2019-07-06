@@ -2,6 +2,7 @@ package fagott
 
 import (
 	"net/http"
+	"net/url"
 	"testing"
 )
 
@@ -43,6 +44,8 @@ type (
 		Method string
 		// Path is the request path.
 		Path string
+		// Query is the request query parameters.
+		Query url.Values
 		// BodyString is the request body.
 		BodyString string
 		// BodyJSON is marshaled to JSON and compared to the request body as JSON.
