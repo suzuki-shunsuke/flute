@@ -2,18 +2,10 @@ package fagott
 
 import (
 	"net/http"
-	"testing"
 )
 
-func NewTransport(t *testing.T, server *Server) *Transport {
-	return &Transport{
-		server: server,
-		t:      t,
-	}
-}
-
 func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
-	for _, service := range transport.server.Services {
+	for _, service := range transport.Services {
 		if !isMatchService(req, &service) {
 			continue
 		}
@@ -29,8 +21,8 @@ func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error)
 				continue
 			}
 			// test
-			if transport.t != nil {
-				testRequest(transport.t, req, &service, &route)
+			if transport.T != nil {
+				testRequest(transport.T, req, &service, &route)
 			}
 			// return response
 			return createHTTPResponse(req, route.Response)
