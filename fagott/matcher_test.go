@@ -190,3 +190,103 @@ func Test_isMatchBodyString(t *testing.T) {
 		})
 	}
 }
+
+func Test_isMatchBodyJSONString(t *testing.T) {
+	data := []struct {
+		title   string
+		req     *http.Request
+		matcher *Matcher
+		isErr   bool
+		exp     bool
+	}{
+		{
+			title: "request body is nil",
+			req:   &http.Request{},
+		},
+		{
+			title: "request body json matches",
+			req: &http.Request{
+				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
+			},
+			matcher: &Matcher{
+				BodyJSONString: `{"name": "foo", "id": 10}`,
+			},
+			exp: true,
+		},
+		{
+			title: "request body json doesn't match",
+			req: &http.Request{
+				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
+			},
+			matcher: &Matcher{
+				BodyJSONString: `{"name": "foo", "id": 9}`,
+			},
+		},
+	}
+
+	for _, d := range data {
+		t.Run(d.title, func(t *testing.T) {
+			b, err := isMatchBodyJSONString(d.req, d.matcher)
+			if d.isErr {
+				require.NotNil(t, err)
+				return
+			}
+			require.Nil(t, err)
+			if d.exp {
+				require.True(t, b)
+				return
+			}
+			require.False(t, b)
+		})
+	}
+}
+
+func Test_isMatchBodyJSON(t *testing.T) {
+	data := []struct {
+		title   string
+		req     *http.Request
+		matcher *Matcher
+		isErr   bool
+		exp     bool
+	}{
+		{
+			title: "request body is nil",
+			req:   &http.Request{},
+		},
+		{
+			title: "request body json matches",
+			req: &http.Request{
+				Body: ioutil.NopCloser(strings.NewReader(`{"name": "foo"}`)),
+			},
+			matcher: &Matcher{
+				BodyJSON: map[string]interface{}{"name": "foo"},
+			},
+			exp: true,
+		},
+		{
+			title: "request body json doesn't match",
+			req: &http.Request{
+				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
+			},
+			matcher: &Matcher{
+				BodyJSON: map[string]interface{}{"name": "foo"},
+			},
+		},
+	}
+
+	for _, d := range data {
+		t.Run(d.title, func(t *testing.T) {
+			b, err := isMatchBodyJSON(d.req, d.matcher)
+			if d.isErr {
+				require.NotNil(t, err)
+				return
+			}
+			require.Nil(t, err)
+			if d.exp {
+				require.True(t, b)
+				return
+			}
+			require.False(t, b)
+		})
+	}
+}
