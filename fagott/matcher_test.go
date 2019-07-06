@@ -115,6 +115,19 @@ func Test_isMatch(t *testing.T) {
 			},
 		},
 		{
+			title: "query doesn't match",
+			req: &http.Request{
+				URL: &url.URL{
+					RawQuery: "name=foo",
+				},
+			},
+			matcher: &Matcher{
+				Query: url.Values{
+					"name": []string{"bar"},
+				},
+			},
+		},
+		{
 			title: "match function doesn't match",
 			matcher: &Matcher{
 				Match: func(req *http.Request) (bool, error) {
