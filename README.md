@@ -1,5 +1,13 @@
 # fagott
 
+[![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](http://godoc.org/github.com/suzuki-shunsuke/fagott/fagott)
+[![Build Status](https://cloud.drone.io/api/badges/suzuki-shunsuke/fagott/status.svg)](https://cloud.drone.io/suzuki-shunsuke/fagott)
+[![codecov](https://codecov.io/gh/suzuki-shunsuke/fagott/branch/master/graph/badge.svg)](https://codecov.io/gh/suzuki-shunsuke/fagott)
+[![Go Report Card](https://goreportcard.com/badge/github.com/suzuki-shunsuke/fagott)](https://goreportcard.com/report/github.com/suzuki-shunsuke/fagott)
+[![GitHub last commit](https://img.shields.io/github/last-commit/suzuki-shunsuke/fagott.svg)](https://github.com/suzuki-shunsuke/fagott)
+[![GitHub tag](https://img.shields.io/github/tag/suzuki-shunsuke/fagott.svg)](https://github.com/suzuki-shunsuke/fagott/releases)
+[![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/suzuki-shunsuke/fagott/master/LICENSE)
+
 Golang HTTP Client testing framework
 
 ## Overview
