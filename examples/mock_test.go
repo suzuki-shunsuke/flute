@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 
 	"github.com/suzuki-shunsuke/fagott/fagott"
 )
@@ -22,7 +23,10 @@ func Example_simpleMock() {
 							Name: "get a user",
 							Matcher: &fagott.Matcher{
 								Method: "GET",
-								Path:   "/users/10",
+								Path:   "/users",
+								Query: url.Values{
+									"id": []string{"10"},
+								},
 							},
 							Response: &fagott.Response{
 								Base: http.Response{
@@ -36,7 +40,7 @@ func Example_simpleMock() {
 			},
 		},
 	}
-	resp, err := http.Get("http://example.com/users/10")
+	resp, err := http.Get("http://example.com/users?id=10")
 	if err != nil {
 		log.Fatal(err)
 	}

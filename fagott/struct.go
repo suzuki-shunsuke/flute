@@ -75,6 +75,10 @@ type (
 		// If the header value is nil, RoundTrip checks whether the key is included in the request header.
 		// Otherwise, RoundTrip also checks whether the value is equal.
 		Header http.Header
+		// Query is the request query parameters.
+		// If the query value is nil, RoundTrip checks whether the key is included in the request query.
+		// Otherwise, RoundTrip also checks whether the value is equal.
+		Query url.Values
 	}
 
 	// Response has the response parameters.
