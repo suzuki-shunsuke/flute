@@ -48,26 +48,30 @@ func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
 		}
 	}
 	if matcher.Header != nil {
-		for k, v := range matcher.Header {
-			if v == nil {
-				if _, ok := req.Header[k]; !ok {
-					return false, nil
-				}
-			} else {
-				a, ok := req.Header[k]
-				if !ok {
-					return false, nil
-				}
-				if !reflect.DeepEqual(a, v) {
-					return false, nil
-				}
-			}
+		f, err := isMatchHeader(req, matcher)
+		if err != nil || !f {
+			return f, err
 		}
 	}
 	if matcher.Match != nil {
 		f, err := matcher.Match(req)
 		if err != nil || !f {
 			return f, err
+		}
+	}
+	return true, nil
+}
+
+func isMatchHeader(req *http.Request, matcher *Matcher) (bool, error) {
+	for k, v := range matcher.Header {
+		a, ok := req.Header[k]
+		if !ok {
+			return false, nil
+		}
+		if v != nil {
+			if !reflect.DeepEqual(a, v) {
+				return false, nil
+			}
 		}
 	}
 	return true, nil

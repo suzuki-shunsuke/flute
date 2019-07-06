@@ -141,6 +141,71 @@ func Test_isMatch(t *testing.T) {
 	}
 }
 
+func Test_isMatchHeader(t *testing.T) {
+	data := []struct {
+		title   string
+		req     *http.Request
+		matcher *Matcher
+		isErr   bool
+		exp     bool
+	}{
+		{
+			title: "header value doesn't match",
+			req: &http.Request{
+				Header: http.Header{
+					"FOO": []string{"foo"},
+				},
+			},
+			matcher: &Matcher{
+				Header: http.Header{
+					"FOO": []string{"bar"},
+				},
+			},
+		},
+		{
+			title: "header isn't found (nil)",
+			req: &http.Request{
+				Header: http.Header{},
+			},
+			matcher: &Matcher{
+				Header: http.Header{
+					"FOO": nil,
+				},
+			},
+		},
+		{
+			title: "header matches",
+			req: &http.Request{
+				Header: http.Header{
+					"FOO": []string{"foo"},
+				},
+			},
+			matcher: &Matcher{
+				Header: http.Header{
+					"FOO": []string{"foo"},
+				},
+			},
+			exp: true,
+		},
+	}
+
+	for _, d := range data {
+		t.Run(d.title, func(t *testing.T) {
+			b, err := isMatchHeader(d.req, d.matcher)
+			if d.isErr {
+				require.NotNil(t, err)
+				return
+			}
+			require.Nil(t, err)
+			if d.exp {
+				require.True(t, b)
+				return
+			}
+			require.False(t, b)
+		})
+	}
+}
+
 func Test_isMatchBodyString(t *testing.T) {
 	data := []struct {
 		title   string
