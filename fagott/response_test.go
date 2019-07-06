@@ -1,12 +1,22 @@
 package fagott
 
 import (
+	"errors"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
+
+type (
+	invalidMarshaler struct{}
+)
+
+func (*invalidMarshaler) MarshalJSON() ([]byte, error) {
+	return nil, errors.New("failed to marshal JSON")
+}
 
 func Test_createHTTPResponse(t *testing.T) {
 	data := []struct {
@@ -24,9 +34,20 @@ func Test_createHTTPResponse(t *testing.T) {
 				BodyJSON: map[string]interface{}{
 					"foo": "bar",
 				},
+				Header: http.Header{
+					"FOO": []string{"foo"},
+				},
 			},
 			exp:  &http.Response{},
 			body: `{"foo":"bar"}`,
+		},
+		{
+			title: "failed to marshal json",
+			req:   &http.Request{},
+			resp: &Response{
+				BodyJSON: &invalidMarshaler{},
+			},
+			isErr: true,
 		},
 		{
 			title: "body string isn't nil",
@@ -36,6 +57,22 @@ func Test_createHTTPResponse(t *testing.T) {
 			},
 			exp:  &http.Response{},
 			body: `{"foo":"bar"}`,
+		},
+		{
+			title: "resp.Response",
+			req:   &http.Request{},
+			resp: &Response{
+				Response: func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						Body:       ioutil.NopCloser(strings.NewReader("foo")),
+						StatusCode: 403,
+					}, nil
+				},
+			},
+			exp: &http.Response{
+				StatusCode: 403,
+			},
+			body: "foo",
 		},
 	}
 
