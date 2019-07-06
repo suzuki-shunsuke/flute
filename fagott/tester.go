@@ -111,7 +111,7 @@ func testBodyJSON(t *testing.T, req *http.Request, service *Service, route *Rout
 		return
 	}
 	assert.JSONEqf(
-		t, string(b), string(c),
+		t, string(c), string(b),
 		makeMsg("request body should match", srv, reqName))
 }
 
