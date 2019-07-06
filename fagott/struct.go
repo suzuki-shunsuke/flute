@@ -66,6 +66,8 @@ type (
 		BodyString string
 		// BodyJSON is marshaled to JSON and compared to the request body as JSON.
 		BodyJSON interface{}
+		// BodyJSONString is a JSON string and compared to the request body as JSON.
+		BodyJSONString string
 		// Header is the request header's conditions.
 		// If the header value is nil, RoundTrip checks whether the key is included in the request header.
 		// Otherwise, RoundTrip also checks whether the value is equal.

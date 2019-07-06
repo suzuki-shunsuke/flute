@@ -24,6 +24,9 @@ func testRequest(t *testing.T, req *http.Request, service *Service, route *Route
 	if tester.BodyJSON != nil {
 		testBodyJSON(t, req, service, route)
 	}
+	if tester.BodyJSONString != "" {
+		testBodyJSONString(t, req, service, route)
+	}
 	if tester.Header != nil {
 		testHeader(t, req, service, route)
 	}
@@ -112,6 +115,32 @@ func testBodyJSON(t *testing.T, req *http.Request, service *Service, route *Rout
 	}
 	assert.JSONEqf(
 		t, string(c), string(b),
+		makeMsg("request body should match", srv, reqName))
+}
+
+func testBodyJSONString(
+	t *testing.T, req *http.Request, service *Service, route *Route,
+) {
+	reqName := route.Name
+	srv := service.Endpoint
+	tester := route.Tester
+
+	if req.Body == nil {
+		assert.Equal(
+			t, tester.BodyString, nil,
+			makeMsg("request body should match", srv, reqName))
+		return
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		assert.Fail(
+			t, makeMsg(
+				fmt.Sprintf("failed to read the request body: %v", err),
+				srv, reqName))
+		return
+	}
+	assert.JSONEqf(
+		t, tester.BodyJSONString, string(b),
 		makeMsg("request body should match", srv, reqName))
 }
 
