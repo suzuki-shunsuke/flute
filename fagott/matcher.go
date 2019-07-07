@@ -47,16 +47,26 @@ func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
 			return f, err
 		}
 	}
+	if matcher.PartOfHeader != nil {
+		f, err := isMatchPartOfHeader(req, matcher)
+		if err != nil || !f {
+			return f, err
+		}
+	}
 	if matcher.Header != nil {
-		f, err := isMatchHeader(req, matcher)
+		if !reflect.DeepEqual(matcher.Header, req.Header) {
+			return false, nil
+		}
+	}
+	if matcher.PartOfQuery != nil {
+		f, err := isMatchPartOfQuery(req, matcher)
 		if err != nil || !f {
 			return f, err
 		}
 	}
 	if matcher.Query != nil {
-		f, err := isMatchQuery(req, matcher)
-		if err != nil || !f {
-			return f, err
+		if !reflect.DeepEqual(matcher.Query, req.URL.Query()) {
+			return false, nil
 		}
 	}
 	if matcher.Match != nil {
@@ -68,8 +78,8 @@ func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
 	return true, nil
 }
 
-func isMatchHeader(req *http.Request, matcher *Matcher) (bool, error) {
-	for k, v := range matcher.Header {
+func isMatchPartOfHeader(req *http.Request, matcher *Matcher) (bool, error) {
+	for k, v := range matcher.PartOfHeader {
 		a, ok := req.Header[k]
 		if !ok {
 			return false, nil
@@ -83,9 +93,9 @@ func isMatchHeader(req *http.Request, matcher *Matcher) (bool, error) {
 	return true, nil
 }
 
-func isMatchQuery(req *http.Request, matcher *Matcher) (bool, error) {
+func isMatchPartOfQuery(req *http.Request, matcher *Matcher) (bool, error) {
 	query := req.URL.Query()
-	for k, v := range matcher.Query {
+	for k, v := range matcher.PartOfQuery {
 		a, ok := query[k]
 		if !ok {
 			return false, nil

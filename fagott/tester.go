@@ -28,11 +28,21 @@ func testRequest(t *testing.T, req *http.Request, service *Service, route *Route
 	if tester.BodyJSONString != "" {
 		testBodyJSONString(t, req, service, route)
 	}
+	if tester.PartOfHeader != nil {
+		testPartOfHeader(t, req, service, route)
+	}
 	if tester.Header != nil {
-		testHeader(t, req, service, route)
+		assert.Equal(
+			t, tester.Header, req.Header,
+			makeMsg("request header should match", service.Endpoint, route.Name))
+	}
+	if tester.PartOfQuery != nil {
+		testPartOfQuery(t, req, service, route)
 	}
 	if tester.Query != nil {
-		testQuery(t, req, service, route)
+		assert.Equal(
+			t, tester.Query, req.URL.Query(),
+			makeMsg("request query parameter should match", service.Endpoint, route.Name))
 	}
 	if tester.Test != nil {
 		tester.Test(t, req, service, route)
@@ -148,11 +158,11 @@ func testBodyJSONString(
 		makeMsg("request body should match", srv, reqName))
 }
 
-func testHeader(t *testing.T, req *http.Request, service *Service, route *Route) {
+func testPartOfHeader(t *testing.T, req *http.Request, service *Service, route *Route) {
 	reqName := route.Name
 	srv := service.Endpoint
 
-	for k, v := range route.Tester.Header {
+	for k, v := range route.Tester.PartOfHeader {
 		a, ok := req.Header[k]
 		if !ok {
 			assert.Fail(
@@ -168,12 +178,12 @@ func testHeader(t *testing.T, req *http.Request, service *Service, route *Route)
 	}
 }
 
-func testQuery(t *testing.T, req *http.Request, service *Service, route *Route) {
+func testPartOfQuery(t *testing.T, req *http.Request, service *Service, route *Route) {
 	reqName := route.Name
 	srv := service.Endpoint
 
 	query := req.URL.Query()
-	for k, v := range route.Tester.Query {
+	for k, v := range route.Tester.PartOfQuery {
 		a, ok := query[k]
 		if !ok {
 			assert.Fail(

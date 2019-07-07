@@ -23,7 +23,7 @@ func Test_testRequest(t *testing.T) {
 				Method: "POST",
 				URL: &url.URL{
 					Path:     "/users",
-					RawQuery: "name=foo",
+					RawQuery: "name=foo&age=10",
 				},
 				Body: ioutil.NopCloser(strings.NewReader(`{
 				  "name": "foo",
@@ -31,6 +31,7 @@ func Test_testRequest(t *testing.T) {
 				}`)),
 				Header: http.Header{
 					"Authorization": []string{"token XXXXX"},
+					"Content-Type":  []string{"application/json"},
 				},
 			},
 			service: &Service{},
@@ -42,11 +43,19 @@ func Test_testRequest(t *testing.T) {
 					  "name": "foo",
 					  "email": "foo@example.com"
 					}`,
+					PartOfHeader: http.Header{
+						"Authorization": []string{"token XXXXX"},
+					},
 					Header: http.Header{
 						"Authorization": []string{"token XXXXX"},
+						"Content-Type":  []string{"application/json"},
+					},
+					PartOfQuery: url.Values{
+						"name": []string{"foo"},
 					},
 					Query: url.Values{
 						"name": []string{"foo"},
+						"age":  []string{"10"},
 					},
 					Test: func(t *testing.T, req *http.Request, service *Service, route *Route) {},
 				},
@@ -263,7 +272,7 @@ func Test_testBodyJSONString(t *testing.T) {
 	}
 }
 
-func Test_testHeader(t *testing.T) {
+func Test_testPartOfHeader(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -292,12 +301,12 @@ func Test_testHeader(t *testing.T) {
 
 	for _, d := range data {
 		t.Run(d.title, func(t *testing.T) {
-			testHeader(t, d.req, d.service, d.route)
+			testPartOfHeader(t, d.req, d.service, d.route)
 		})
 	}
 }
 
-func Test_testQuery(t *testing.T) {
+func Test_testPartOfQuery(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -324,7 +333,7 @@ func Test_testQuery(t *testing.T) {
 
 	for _, d := range data {
 		t.Run(d.title, func(t *testing.T) {
-			testQuery(t, d.req, d.service, d.route)
+			testPartOfQuery(t, d.req, d.service, d.route)
 		})
 	}
 }
