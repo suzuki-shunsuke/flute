@@ -15,13 +15,11 @@ import (
 func TestTransport_RoundTrip(t *testing.T) {
 	token := "XXXXX"
 	data := []struct {
-		title            string
-		req              *http.Request
-		transport        *Transport
-		isErr            bool
-		defaultClient    *http.Client
-		defaultTransport http.RoundTripper
-		exp              *http.Response
+		title     string
+		req       *http.Request
+		transport *Transport
+		isErr     bool
+		exp       *http.Response
 	}{
 		{
 			title: "normal",
@@ -114,8 +112,14 @@ func TestTransport_RoundTrip(t *testing.T) {
 						},
 					},
 				},
+				Transport: NewMockRoundTripper(t, gomic.DoNothing).
+					SetReturnRoundTrip(&http.Response{
+						StatusCode: 401,
+					}, nil),
 			},
-			isErr: true,
+			exp: &http.Response{
+				StatusCode: 401,
+			},
 		},
 		{
 			title: "transport.Transport is called",
@@ -130,60 +134,10 @@ func TestTransport_RoundTrip(t *testing.T) {
 				StatusCode: 401,
 			},
 		},
-		{
-			title: "http.DefaultClient is used",
-			req: &http.Request{
-				URL: &url.URL{
-					Scheme: "http",
-					Host:   "example.com",
-				},
-			},
-			transport: &Transport{},
-			defaultClient: &http.Client{
-				Transport: NewMockRoundTripper(t, gomic.DoNothing).
-					SetReturnRoundTrip(&http.Response{
-						StatusCode: 401,
-					}, nil),
-			},
-			exp: &http.Response{
-				StatusCode: 401,
-			},
-		},
-		{
-			title: "http.DefaultTransport is used",
-			req: &http.Request{
-				URL: &url.URL{
-					Scheme: "http",
-					Host:   "example.com",
-				},
-			},
-			transport: &Transport{},
-			defaultTransport: NewMockRoundTripper(t, gomic.DoNothing).
-				SetReturnRoundTrip(&http.Response{
-					StatusCode: 401,
-				}, nil),
-			exp: &http.Response{
-				StatusCode: 401,
-			},
-		},
 	}
 
 	for _, d := range data {
 		t.Run(d.title, func(t *testing.T) {
-			if d.defaultClient != nil {
-				defer func(h *http.Client) {
-					http.DefaultClient = h
-				}(http.DefaultClient)
-				http.DefaultClient = d.defaultClient
-			}
-			if d.defaultTransport != nil {
-				defer func(c, r http.RoundTripper) {
-					http.DefaultClient.Transport = c
-					http.DefaultTransport = r
-				}(http.DefaultClient.Transport, http.DefaultTransport)
-				http.DefaultClient.Transport = d.transport
-				http.DefaultTransport = d.defaultTransport
-			}
 			resp, err := d.transport.RoundTrip(d.req)
 			if d.isErr {
 				require.NotNil(t, err)
