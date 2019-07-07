@@ -23,9 +23,9 @@ func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error)
 			b, err := isMatch(req, route.Matcher)
 			if err != nil {
 				if transport.T != nil {
-					transport.T.Logf("failed to check whether the route matches with the request: %v", err)
+					transport.T.Logf("failed to check whether the route matches the request: %v", err)
 				} else {
-					fmt.Fprintf(os.Stderr, "failed to check whether the route matches with the request: %v\n", err)
+					fmt.Fprintf(os.Stderr, "failed to check whether the route matches the request: %v\n", err)
 				}
 			}
 			if !b {
@@ -39,7 +39,7 @@ func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error)
 			return createHTTPResponse(req, route.Response)
 		}
 	}
-	// there is no match route
+	// no route matches the request
 	if transport.Transport != nil {
 		return transport.Transport.RoundTrip(req)
 	}
@@ -51,7 +51,7 @@ func noMatchedRouteRoundTrip(t *testing.T, req *http.Request) (*http.Response, e
 		return &http.Response{
 			Request:    req,
 			StatusCode: 404,
-			Body:       ioutil.NopCloser(strings.NewReader(`{"message": "there is no matched route"}`)),
+			Body:       ioutil.NopCloser(strings.NewReader(`{"message": "no route matches the request"}`)),
 		}, nil
 	}
 	query := req.URL.Query()
@@ -80,7 +80,7 @@ func noMatchedRouteRoundTrip(t *testing.T, req *http.Request) (*http.Response, e
 	}
 
 	require.Fail(
-		t, fmt.Sprintf(`there is no matched route.
+		t, fmt.Sprintf(`no route matches the request.
 url: %s
 method: %s
 query:
@@ -98,6 +98,6 @@ body:
 	return &http.Response{
 		Request:    req,
 		StatusCode: 404,
-		Body:       ioutil.NopCloser(strings.NewReader(`{"message": "there is no matched route"}`)),
+		Body:       ioutil.NopCloser(strings.NewReader(`{"message": "no route matches the request"}`)),
 	}, nil
 }
