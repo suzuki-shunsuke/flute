@@ -12,6 +12,18 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	noMatchedRouteMsgTpl = `no route matches the request.
+url: %s
+method: %s
+query:
+%s
+header:
+%s
+body:
+%s`
+)
+
 // RoundTrip implements http.RoundTripper.
 // RoundTrip traverses the matched route and run the test and returns response.
 func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
@@ -46,14 +58,7 @@ func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error)
 	return noMatchedRouteRoundTrip(transport.T, req)
 }
 
-func noMatchedRouteRoundTrip(t *testing.T, req *http.Request) (*http.Response, error) {
-	if t == nil {
-		return &http.Response{
-			Request:    req,
-			StatusCode: 404,
-			Body:       ioutil.NopCloser(strings.NewReader(`{"message": "no route matches the request"}`)),
-		}, nil
-	}
+func makeNoMatchedRouteMsg(t *testing.T, req *http.Request) string {
 	query := req.URL.Query()
 	qArr := make([]string, len(query))
 	i := 0
@@ -78,23 +83,26 @@ func noMatchedRouteRoundTrip(t *testing.T, req *http.Request) (*http.Response, e
 			body = string(b)
 		}
 	}
+	return fmt.Sprintf(
+		noMatchedRouteMsgTpl,
+		req.URL.String(),
+		req.Method,
+		strings.Join(qArr, "\n"),
+		strings.Join(hArr, "\n"),
+		body,
+	)
+}
 
-	require.Fail(
-		t, fmt.Sprintf(`no route matches the request.
-url: %s
-method: %s
-query:
-%s
-header:
-%s
-body:
-%s`,
-			req.URL.String(),
-			req.Method,
-			strings.Join(qArr, "\n"),
-			strings.Join(hArr, "\n"),
-			body,
-		))
+func noMatchedRouteRoundTrip(t *testing.T, req *http.Request) (*http.Response, error) {
+	if t == nil {
+		return &http.Response{
+			Request:    req,
+			StatusCode: 404,
+			Body:       ioutil.NopCloser(strings.NewReader(`{"message": "no route matches the request"}`)),
+		}, nil
+	}
+
+	require.Fail(t, makeNoMatchedRouteMsg(t, req))
 	return &http.Response{
 		Request:    req,
 		StatusCode: 404,
