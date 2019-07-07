@@ -12,45 +12,43 @@ func TestClient_CreateUser(t *testing.T) {
 	token := "XXXXX"
 	client := &Client{
 		Token: token,
-		ClientFn: func() (*http.Client, error) {
-			return &http.Client{
-				Transport: &fagott.Transport{
-					T: t,
-					Services: []fagott.Service{
-						{
-							Endpoint: "http://example.com",
-							Routes: []fagott.Route{
-								{
-									Name: "create a user",
-									Matcher: &fagott.Matcher{
-										Method: "POST",
-										Path:   "/users",
-									},
-									Tester: &fagott.Tester{
-										BodyJSONString: `{
+		HTTPClient: &http.Client{
+			Transport: &fagott.Transport{
+				T: t,
+				Services: []fagott.Service{
+					{
+						Endpoint: "http://example.com",
+						Routes: []fagott.Route{
+							{
+								Name: "create a user",
+								Matcher: &fagott.Matcher{
+									Method: "POST",
+									Path:   "/users",
+								},
+								Tester: &fagott.Tester{
+									BodyJSONString: `{
 										  "name": "foo",
 										  "email": "foo@example.com"
 										}`,
-										Header: http.Header{
-											"Authorization": []string{"token " + token},
-										},
+									Header: http.Header{
+										"Authorization": []string{"token " + token},
 									},
-									Response: &fagott.Response{
-										Base: http.Response{
-											StatusCode: 201,
-										},
-										BodyString: `{
+								},
+								Response: &fagott.Response{
+									Base: http.Response{
+										StatusCode: 201,
+									},
+									BodyString: `{
 										  "id": 10,
 										  "name": "foo",
 										  "email": "foo@example.com"
 										}`,
-									},
 								},
 							},
 						},
 					},
 				},
-			}, nil
+			},
 		},
 	}
 	user, _, err := client.CreateUser(&User{
