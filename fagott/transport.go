@@ -1,7 +1,15 @@
 package fagott
 
 import (
+	"fmt"
+	"io/ioutil"
 	"net/http"
+	"os"
+	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // RoundTrip implements http.RoundTripper.
@@ -14,10 +22,11 @@ func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error)
 		for _, route := range service.Routes {
 			b, err := isMatch(req, route.Matcher)
 			if err != nil {
-				return &http.Response{
-					Request:    req,
-					StatusCode: 500,
-				}, err
+				if transport.T != nil {
+					transport.T.Logf("failed to check whether the route matches the request: %v", err)
+				} else {
+					fmt.Fprintf(os.Stderr, "failed to check whether the route matches the request: %v\n", err)
+				}
 			}
 			if !b {
 				continue
@@ -30,12 +39,65 @@ func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error)
 			return createHTTPResponse(req, route.Response)
 		}
 	}
-	// there is no match response
+	// no route matches the request
 	if transport.Transport != nil {
 		return transport.Transport.RoundTrip(req)
 	}
-	if http.DefaultClient.Transport != nil && http.DefaultClient.Transport != transport {
-		return http.DefaultClient.Transport.RoundTrip(req)
+	return noMatchedRouteRoundTrip(transport.T, req)
+}
+
+func noMatchedRouteRoundTrip(t *testing.T, req *http.Request) (*http.Response, error) {
+	if t == nil {
+		return &http.Response{
+			Request:    req,
+			StatusCode: 404,
+			Body:       ioutil.NopCloser(strings.NewReader(`{"message": "no route matches the request"}`)),
+		}, nil
 	}
-	return http.DefaultTransport.RoundTrip(req)
+	query := req.URL.Query()
+	qArr := make([]string, len(query))
+	i := 0
+	for k, v := range query {
+		qArr[i] = "  " + k + ": " + strings.Join(v, ", ")
+		i++
+	}
+
+	hArr := make([]string, len(req.Header))
+	j := 0
+	for k, v := range req.Header {
+		hArr[j] = "  " + k + ": " + strings.Join(v, ", ")
+		j++
+	}
+
+	body := ""
+	if req.Body != nil {
+		b, err := ioutil.ReadAll(req.Body)
+		if err != nil {
+			assert.Nil(t, err, "failed to reqd the request body")
+		} else {
+			body = string(b)
+		}
+	}
+
+	require.Fail(
+		t, fmt.Sprintf(`no route matches the request.
+url: %s
+method: %s
+query:
+%s
+header:
+%s
+body:
+%s`,
+			req.URL.String(),
+			req.Method,
+			strings.Join(qArr, "\n"),
+			strings.Join(hArr, "\n"),
+			body,
+		))
+	return &http.Response{
+		Request:    req,
+		StatusCode: 404,
+		Body:       ioutil.NopCloser(strings.NewReader(`{"message": "no route matches the request"}`)),
+	}, nil
 }
