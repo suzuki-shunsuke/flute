@@ -9,8 +9,8 @@ import (
 type (
 	// Client is a simple API client
 	Client struct {
-		ClientFn func() (*http.Client, error)
-		Token    string
+		HTTPClient *http.Client
+		Token      string
 	}
 
 	// User is a User
@@ -23,13 +23,9 @@ type (
 
 // CreateUser create a user.
 func (client *Client) CreateUser(user *User) (*User, *http.Response, error) {
-	c := &http.Client{}
-	if client.ClientFn != nil {
-		var err error
-		c, err = client.ClientFn()
-		if err != nil {
-			return nil, nil, err
-		}
+	c := client.HTTPClient
+	if c == nil {
+		c = http.DefaultClient
 	}
 	b, err := json.Marshal(user)
 	if err != nil {
