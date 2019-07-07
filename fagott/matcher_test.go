@@ -123,7 +123,7 @@ func Test_isMatch(t *testing.T) {
 				},
 			},
 			matcher: &Matcher{
-				HeaderEqual: http.Header{
+				Header: http.Header{
 					"FOO": []string{"foo"},
 				},
 			},
@@ -136,7 +136,7 @@ func Test_isMatch(t *testing.T) {
 				},
 			},
 			matcher: &Matcher{
-				Query: url.Values{
+				PartOfQuery: url.Values{
 					"name": []string{"bar"},
 				},
 			},
@@ -149,7 +149,7 @@ func Test_isMatch(t *testing.T) {
 				},
 			},
 			matcher: &Matcher{
-				QueryEqual: url.Values{
+				Query: url.Values{
 					"name": []string{"foo"},
 				},
 			},
@@ -181,7 +181,7 @@ func Test_isMatch(t *testing.T) {
 	}
 }
 
-func Test_isMatchQuery(t *testing.T) {
+func Test_isMatchPartOfQuery(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -190,14 +190,14 @@ func Test_isMatchQuery(t *testing.T) {
 		exp     bool
 	}{
 		{
-			title: "header value doesn't match",
+			title: "query value doesn't match",
 			req: &http.Request{
 				URL: &url.URL{
 					RawQuery: "name=foo",
 				},
 			},
 			matcher: &Matcher{
-				Query: url.Values{
+				PartOfQuery: url.Values{
 					"name": []string{"bar"},
 				},
 			},
@@ -208,7 +208,7 @@ func Test_isMatchQuery(t *testing.T) {
 				URL: &url.URL{},
 			},
 			matcher: &Matcher{
-				Query: url.Values{
+				PartOfQuery: url.Values{
 					"name": nil,
 				},
 			},
@@ -221,7 +221,7 @@ func Test_isMatchQuery(t *testing.T) {
 				},
 			},
 			matcher: &Matcher{
-				Query: url.Values{
+				PartOfQuery: url.Values{
 					"name": []string{"foo"},
 				},
 			},
@@ -231,7 +231,7 @@ func Test_isMatchQuery(t *testing.T) {
 
 	for _, d := range data {
 		t.Run(d.title, func(t *testing.T) {
-			b, err := isMatchQuery(d.req, d.matcher)
+			b, err := isMatchPartOfQuery(d.req, d.matcher)
 			if d.isErr {
 				require.NotNil(t, err)
 				return
@@ -246,7 +246,7 @@ func Test_isMatchQuery(t *testing.T) {
 	}
 }
 
-func Test_isMatchHeader(t *testing.T) {
+func Test_isMatchPartOfHeader(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -262,7 +262,7 @@ func Test_isMatchHeader(t *testing.T) {
 				},
 			},
 			matcher: &Matcher{
-				Header: http.Header{
+				PartOfHeader: http.Header{
 					"FOO": []string{"bar"},
 				},
 			},
@@ -273,7 +273,7 @@ func Test_isMatchHeader(t *testing.T) {
 				Header: http.Header{},
 			},
 			matcher: &Matcher{
-				Header: http.Header{
+				PartOfHeader: http.Header{
 					"FOO": nil,
 				},
 			},
@@ -286,7 +286,7 @@ func Test_isMatchHeader(t *testing.T) {
 				},
 			},
 			matcher: &Matcher{
-				Header: http.Header{
+				PartOfHeader: http.Header{
 					"FOO": []string{"foo"},
 				},
 			},
@@ -296,7 +296,7 @@ func Test_isMatchHeader(t *testing.T) {
 
 	for _, d := range data {
 		t.Run(d.title, func(t *testing.T) {
-			b, err := isMatchHeader(d.req, d.matcher)
+			b, err := isMatchPartOfHeader(d.req, d.matcher)
 			if d.isErr {
 				require.NotNil(t, err)
 				return

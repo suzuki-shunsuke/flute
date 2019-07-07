@@ -43,17 +43,17 @@ func Test_testRequest(t *testing.T) {
 					  "name": "foo",
 					  "email": "foo@example.com"
 					}`,
-					Header: http.Header{
+					PartOfHeader: http.Header{
 						"Authorization": []string{"token XXXXX"},
 					},
-					HeaderEqual: http.Header{
+					Header: http.Header{
 						"Authorization": []string{"token XXXXX"},
 						"Content-Type":  []string{"application/json"},
 					},
-					Query: url.Values{
+					PartOfQuery: url.Values{
 						"name": []string{"foo"},
 					},
-					QueryEqual: url.Values{
+					Query: url.Values{
 						"name": []string{"foo"},
 						"age":  []string{"10"},
 					},
@@ -272,7 +272,7 @@ func Test_testBodyJSONString(t *testing.T) {
 	}
 }
 
-func Test_testHeader(t *testing.T) {
+func Test_testPartOfHeader(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -301,12 +301,12 @@ func Test_testHeader(t *testing.T) {
 
 	for _, d := range data {
 		t.Run(d.title, func(t *testing.T) {
-			testHeader(t, d.req, d.service, d.route)
+			testPartOfHeader(t, d.req, d.service, d.route)
 		})
 	}
 }
 
-func Test_testQuery(t *testing.T) {
+func Test_testPartOfQuery(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -333,7 +333,7 @@ func Test_testQuery(t *testing.T) {
 
 	for _, d := range data {
 		t.Run(d.title, func(t *testing.T) {
-			testQuery(t, d.req, d.service, d.route)
+			testPartOfQuery(t, d.req, d.service, d.route)
 		})
 	}
 }

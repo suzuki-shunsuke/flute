@@ -44,22 +44,22 @@ type (
 		Method string
 		// Path is the request path.
 		Path string
+		// PartOfQuery is the request query parameters.
+		PartOfQuery url.Values
 		// Query is the request query parameters.
 		Query url.Values
-		// QueryEqual is the request query parameters.
-		QueryEqual url.Values
 		// BodyString is the request body.
 		BodyString string
 		// BodyJSON is marshaled to JSON and compared to the request body as JSON.
 		BodyJSON interface{}
 		// BodyJSONString is a JSON string and compared to the request body as JSON.
 		BodyJSONString string
-		// Header is the request header's conditions.
+		// PartOfHeader is the request header's conditions.
 		// If the header value is nil, RoundTrip checks whether the key is included in the request header.
 		// Otherwise, RoundTrip also checks whether the value is equal.
+		PartOfHeader http.Header
+		// Header is the request header's conditions.
 		Header http.Header
-		// HeaderEqual is the request header's conditions.
-		HeaderEqual http.Header
 	}
 
 	// Tester has the request's tests.
@@ -75,18 +75,18 @@ type (
 		BodyJSON interface{}
 		// BodyJSONString is a JSON string and compared to the request body as JSON.
 		BodyJSONString string
-		// Header is the request header's conditions.
+		// PartOfHeader is the request header's conditions.
 		// If the header value is nil, RoundTrip checks whether the key is included in the request header.
 		// Otherwise, RoundTrip also checks whether the value is equal.
+		PartOfHeader http.Header
+		// Header is the request header's conditions.
 		Header http.Header
-		// HeaderEqual is the request header's conditions.
-		HeaderEqual http.Header
-		// Query is the request query parameters.
+		// PartOfQuery is the request query parameters.
 		// If the query value is nil, RoundTrip checks whether the key is included in the request query.
 		// Otherwise, RoundTrip also checks whether the value is equal.
+		PartOfQuery url.Values
+		// Query is the request query parameters.
 		Query url.Values
-		// QueryEqual is the request query parameters.
-		QueryEqual url.Values
 	}
 
 	// Response has the response parameters.
