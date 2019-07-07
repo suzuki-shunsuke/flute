@@ -128,6 +128,19 @@ func Test_isMatch(t *testing.T) {
 			},
 		},
 		{
+			title: "query isn't equal",
+			req: &http.Request{
+				URL: &url.URL{
+					RawQuery: "name=foo&age=10",
+				},
+			},
+			matcher: &Matcher{
+				QueryEqual: url.Values{
+					"name": []string{"foo"},
+				},
+			},
+		},
+		{
 			title: "match function doesn't match",
 			matcher: &Matcher{
 				Match: func(req *http.Request) (bool, error) {

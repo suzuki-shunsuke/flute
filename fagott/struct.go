@@ -46,6 +46,8 @@ type (
 		Path string
 		// Query is the request query parameters.
 		Query url.Values
+		// QueryEqual is the request query parameters.
+		QueryEqual url.Values
 		// BodyString is the request body.
 		BodyString string
 		// BodyJSON is marshaled to JSON and compared to the request body as JSON.

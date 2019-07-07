@@ -59,6 +59,11 @@ func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
 			return f, err
 		}
 	}
+	if matcher.QueryEqual != nil {
+		if !reflect.DeepEqual(matcher.QueryEqual, req.URL.Query()) {
+			return false, nil
+		}
+	}
 	if matcher.Match != nil {
 		f, err := matcher.Match(req)
 		if err != nil || !f {
