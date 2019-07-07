@@ -31,6 +31,11 @@ func testRequest(t *testing.T, req *http.Request, service *Service, route *Route
 	if tester.Header != nil {
 		testHeader(t, req, service, route)
 	}
+	if tester.HeaderEqual != nil {
+		assert.Equal(
+			t, tester.HeaderEqual, req.Header,
+			makeMsg("request header should match", service.Endpoint, route.Name))
+	}
 	if tester.Query != nil {
 		testQuery(t, req, service, route)
 	}

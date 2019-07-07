@@ -31,6 +31,7 @@ func Test_testRequest(t *testing.T) {
 				}`)),
 				Header: http.Header{
 					"Authorization": []string{"token XXXXX"},
+					"Content-Type":  []string{"application/json"},
 				},
 			},
 			service: &Service{},
@@ -44,6 +45,10 @@ func Test_testRequest(t *testing.T) {
 					}`,
 					Header: http.Header{
 						"Authorization": []string{"token XXXXX"},
+					},
+					HeaderEqual: http.Header{
+						"Authorization": []string{"token XXXXX"},
+						"Content-Type":  []string{"application/json"},
 					},
 					Query: url.Values{
 						"name": []string{"foo"},

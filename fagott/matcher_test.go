@@ -115,6 +115,20 @@ func Test_isMatch(t *testing.T) {
 			},
 		},
 		{
+			title: "header isn't equal",
+			req: &http.Request{
+				Header: http.Header{
+					"FOO": []string{"foo"},
+					"BAR": []string{"bar"},
+				},
+			},
+			matcher: &Matcher{
+				HeaderEqual: http.Header{
+					"FOO": []string{"foo"},
+				},
+			},
+		},
+		{
 			title: "query doesn't match",
 			req: &http.Request{
 				URL: &url.URL{
