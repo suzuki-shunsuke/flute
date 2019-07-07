@@ -23,7 +23,7 @@ func Test_testRequest(t *testing.T) {
 				Method: "POST",
 				URL: &url.URL{
 					Path:     "/users",
-					RawQuery: "name=foo",
+					RawQuery: "name=foo&age=10",
 				},
 				Body: ioutil.NopCloser(strings.NewReader(`{
 				  "name": "foo",
@@ -47,6 +47,10 @@ func Test_testRequest(t *testing.T) {
 					},
 					Query: url.Values{
 						"name": []string{"foo"},
+					},
+					QueryEqual: url.Values{
+						"name": []string{"foo"},
+						"age":  []string{"10"},
 					},
 					Test: func(t *testing.T, req *http.Request, service *Service, route *Route) {},
 				},

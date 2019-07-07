@@ -34,6 +34,11 @@ func testRequest(t *testing.T, req *http.Request, service *Service, route *Route
 	if tester.Query != nil {
 		testQuery(t, req, service, route)
 	}
+	if tester.QueryEqual != nil {
+		assert.Equal(
+			t, tester.QueryEqual, req.URL.Query(),
+			makeMsg("request query parameter should match", service.Endpoint, route.Name))
+	}
 	if tester.Test != nil {
 		tester.Test(t, req, service, route)
 	}

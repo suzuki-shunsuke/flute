@@ -81,6 +81,8 @@ type (
 		// If the query value is nil, RoundTrip checks whether the key is included in the request query.
 		// Otherwise, RoundTrip also checks whether the value is equal.
 		Query url.Values
+		// QueryEqual is the request query parameters.
+		QueryEqual url.Values
 	}
 
 	// Response has the response parameters.
