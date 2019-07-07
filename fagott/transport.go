@@ -34,7 +34,7 @@ func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error)
 	if transport.Transport != nil {
 		return transport.Transport.RoundTrip(req)
 	}
-	if http.DefaultClient.Transport != transport {
+	if http.DefaultClient.Transport != nil && http.DefaultClient.Transport != transport {
 		return http.DefaultClient.Transport.RoundTrip(req)
 	}
 	return http.DefaultTransport.RoundTrip(req)
