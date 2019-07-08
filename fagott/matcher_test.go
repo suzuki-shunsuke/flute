@@ -55,6 +55,15 @@ func Test_isMatch(t *testing.T) {
 		exp     bool
 	}{
 		{
+			title: "if mathcer is nil, the request matches the matcher",
+			req: &http.Request{
+				URL: &url.URL{
+					Path: "/foo",
+				},
+			},
+			exp: true,
+		},
+		{
 			title: "path doesn't match",
 			req: &http.Request{
 				URL: &url.URL{
