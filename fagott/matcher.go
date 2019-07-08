@@ -19,6 +19,10 @@ func isMatchService(req *http.Request, service *Service) bool {
 // isMatch returns whether the request matches with the matcher.
 // If the matcher has multiple conditions, IsMatch returns true if the request meets all conditions.
 func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
+	if matcher == nil {
+		// SPEC if the matcher is nil, the route matches the request.
+		return true, nil
+	}
 	if matcher.Path != "" {
 		if matcher.Path != req.URL.Path {
 			return false, nil

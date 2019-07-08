@@ -18,6 +18,21 @@ func Test_testRequest(t *testing.T) {
 		route   *Route
 	}{
 		{
+			title: "if the tester is nil, do nothing",
+			req: &http.Request{
+				Method: "POST",
+				URL: &url.URL{
+					Path:     "/users",
+					RawQuery: "name=foo&age=10",
+				},
+				Body: ioutil.NopCloser(strings.NewReader(`{
+				  "name": "foo",
+				  "email": "foo@example.com"
+				}`)),
+			},
+			route: &Route{},
+		},
+		{
 			title: "body json string",
 			req: &http.Request{
 				Method: "POST",
