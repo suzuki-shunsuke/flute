@@ -30,8 +30,9 @@ type (
 	// Route is the pair of the macher, tester, and response.
 	Route struct {
 		// Name is embedded the assertion and useful to specify where the test fails.
-		Name     string
-		Matcher  *Matcher
+		Name string
+		// SPEC if the matcher is nil, the route matches the request.
+		Matcher *Matcher
 		Tester   *Tester
 		Response *Response
 	}
