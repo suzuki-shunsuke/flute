@@ -33,6 +33,7 @@ type (
 		Name string
 		// SPEC if the matcher is nil, the route matches the request.
 		Matcher *Matcher
+		// SPEC if the tester is nil, no test is run
 		Tester   *Tester
 		Response *Response
 	}
