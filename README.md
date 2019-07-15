@@ -10,6 +10,10 @@
 
 Golang HTTP Client testing framework
 
+## Presentation
+
+https://speakerdeck.com/szksh/introduction-of-fagott-golang-http-client-testing-framework
+
 ## Overview
 
 `fagott` is the Golang HTTP client testing framework.
