@@ -12,7 +12,7 @@ Golang HTTP Client testing framework
 
 ## Presentation
 
-https://speakerdeck.com/szksh/introduction-of-flute-golang-http-client-testing-framework
+https://speakerdeck.com/szksh/flute-golang-http-client-testing-framework
 
 ## Note: This project name was changed
 
