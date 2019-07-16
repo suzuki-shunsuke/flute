@@ -8,7 +8,7 @@
 [![GitHub tag](https://img.shields.io/github/tag/suzuki-shunsuke/flute.svg)](https://github.com/suzuki-shunsuke/flute/releases)
 [![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/suzuki-shunsuke/flute/master/LICENSE)
 
-Golang HTTP Client testing framework
+Golang HTTP client testing framework
 
 ## Presentation
 
@@ -63,6 +63,8 @@ For example, the following test failure message means the request header is unex
                                 service: http://example.com
                                 request name: create a user
 ```
+
+You can define test cases declaratively. Please see [the example](https://github.com/suzuki-shunsuke/flute/blob/v0.6.0/examples/create_user_test.go#L21-L48).
 
 ## Example
 
