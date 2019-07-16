@@ -26,7 +26,7 @@ kind: pipeline
 name: build
 workspace:
   base: /go
-  path: src/github.com/suzuki-shunsuke/fagott
+  path: src/github.com/suzuki-shunsuke/flute
 steps:
 - name: durl
   image: quay.io/suzuki_shunsuke/durl:1.0.0

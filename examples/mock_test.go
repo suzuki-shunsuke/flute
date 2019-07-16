@@ -7,28 +7,28 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/suzuki-shunsuke/fagott/fagott"
+	"github.com/suzuki-shunsuke/flute/flute"
 )
 
 func Example_simpleMock() {
 	http.DefaultClient = &http.Client{
-		Transport: &fagott.Transport{
+		Transport: &flute.Transport{
 			// if *testing.T isn't given, the transport is a just mock and doesn't run the test.
 			// T: t,
-			Services: []fagott.Service{
+			Services: []flute.Service{
 				{
 					Endpoint: "http://example.com",
-					Routes: []fagott.Route{
+					Routes: []flute.Route{
 						{
 							Name: "get a user",
-							Matcher: &fagott.Matcher{
+							Matcher: &flute.Matcher{
 								Method: "GET",
 								Path:   "/users",
 								Query: url.Values{
 									"id": []string{"10"},
 								},
 							},
-							Response: &fagott.Response{
+							Response: &flute.Response{
 								Base: http.Response{
 									StatusCode: 201,
 								},
