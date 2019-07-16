@@ -1,4 +1,4 @@
-module github.com/suzuki-shunsuke/fagott
+module github.com/suzuki-shunsuke/flute
 
 go 1.12
 

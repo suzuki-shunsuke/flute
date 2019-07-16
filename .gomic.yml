@@ -5,5 +5,5 @@ items:
     interface: RoundTripper
     name: MockRoundTripper
   dest:
-    package: fagott
-    file: fagott/mock_round_tripper_test.go
+    package: flute
+    file: flute/mock_round_tripper_test.go

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/suzuki-shunsuke/fagott/fagott"
+	"github.com/suzuki-shunsuke/flute/flute"
 )
 
 func TestClient_CreateUser(t *testing.T) {
@@ -13,19 +13,19 @@ func TestClient_CreateUser(t *testing.T) {
 	client := &Client{
 		Token: token,
 		HTTPClient: &http.Client{
-			Transport: &fagott.Transport{
+			Transport: &flute.Transport{
 				T: t,
-				Services: []fagott.Service{
+				Services: []flute.Service{
 					{
 						Endpoint: "http://example.com",
-						Routes: []fagott.Route{
+						Routes: []flute.Route{
 							{
 								Name: "create a user",
-								Matcher: &fagott.Matcher{
+								Matcher: &flute.Matcher{
 									Method: "POST",
 									Path:   "/users",
 								},
-								Tester: &fagott.Tester{
+								Tester: &flute.Tester{
 									BodyJSONString: `{
 										  "name": "foo",
 										  "email": "foo@example.com"
@@ -34,7 +34,7 @@ func TestClient_CreateUser(t *testing.T) {
 										"Authorization": []string{"token " + token},
 									},
 								},
-								Response: &fagott.Response{
+								Response: &flute.Response{
 									Base: http.Response{
 										StatusCode: 201,
 									},
