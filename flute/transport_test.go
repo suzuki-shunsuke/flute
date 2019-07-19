@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/suzuki-shunsuke/gomic/gomic"
 )
@@ -122,6 +123,79 @@ func TestTransport_RoundTrip(t *testing.T) {
 			},
 		},
 		{
+			title: "failed to match and transport.T isn't nil",
+			req: &http.Request{
+				URL: &url.URL{
+					Scheme: "http",
+					Host:   "example.com",
+					Path:   "/users",
+				},
+				Method: "POST",
+				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+				Header: http.Header{
+					"Authorization": []string{"token " + token},
+				},
+			},
+			transport: &Transport{
+				T: t,
+				Services: []Service{
+					{
+						Endpoint: "http://example.com",
+						Routes: []Route{
+							{
+								Matcher: &Matcher{
+									Match: func(req *http.Request) (bool, error) {
+										return false, errors.New("failed to match")
+									},
+								},
+							},
+						},
+					},
+				},
+				Transport: NewMockRoundTripper(t, gomic.DoNothing).
+					SetReturnRoundTrip(&http.Response{
+						StatusCode: 401,
+					}, nil),
+			},
+			exp: &http.Response{
+				StatusCode: 401,
+			},
+		},
+		{
+			title: "noMatchedRouteRoundTrip is called",
+			req: &http.Request{
+				URL: &url.URL{
+					Scheme: "http",
+					Host:   "example.com",
+					Path:   "/users",
+				},
+				Method: "POST",
+				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+				Header: http.Header{
+					"Authorization": []string{"token " + token},
+				},
+			},
+			transport: &Transport{
+				Services: []Service{
+					{
+						Endpoint: "http://example.com",
+						Routes: []Route{
+							{
+								Matcher: &Matcher{
+									Match: func(req *http.Request) (bool, error) {
+										return false, errors.New("failed to match")
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			exp: &http.Response{
+				StatusCode: 404,
+			},
+		},
+		{
 			title: "transport.Transport is called",
 			req:   &http.Request{},
 			transport: &Transport{
@@ -187,4 +261,36 @@ body:
 			require.Equal(t, d.exp, makeNoMatchedRouteMsg(t, d.req))
 		})
 	}
+}
+
+func Test_noMatchedRouteRoundTrip(t *testing.T) {
+	data := []struct {
+		t          *testing.T
+		title      string
+		req        *http.Request
+		statusCode int
+		isErr      bool
+	}{
+		{
+			t:     nil,
+			title: "normal",
+			req: &http.Request{
+				URL: &url.URL{},
+			},
+			statusCode: 404,
+		},
+	}
+
+	for _, d := range data {
+		t.Run(d.title, func(t *testing.T) {
+			resp, err := noMatchedRouteRoundTrip(d.t, d.req)
+			if d.isErr {
+				assert.NotNil(t, err)
+				return
+			}
+			assert.Nil(t, err)
+			require.Equal(t, d.statusCode, resp.StatusCode)
+		})
+	}
+
 }
