@@ -118,7 +118,7 @@ func Test_isMatch(t *testing.T) {
 				},
 			},
 			matcher: &Matcher{
-				Header: http.Header{
+				PartOfHeader: http.Header{
 					"FOO": []string{"bar"},
 				},
 			},

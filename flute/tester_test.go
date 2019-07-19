@@ -158,6 +158,16 @@ func Test_testBodyString(t *testing.T) {
 				},
 			},
 		},
+		{
+			title:   "request body is nil",
+			req:     &http.Request{},
+			service: &Service{},
+			route: &Route{
+				Tester: &Tester{
+					BodyString: "",
+				},
+			},
+		},
 	}
 
 	for _, d := range data {
@@ -248,6 +258,14 @@ func Test_testBodyJSON(t *testing.T) {
 				},
 			},
 		},
+		{
+			title:   "the request body is nil",
+			req:     &http.Request{},
+			service: &Service{},
+			route: &Route{
+				Tester: &Tester{},
+			},
+		},
 	}
 
 	for _, d := range data {
@@ -276,6 +294,14 @@ func Test_testBodyJSONString(t *testing.T) {
 					{"foo":"bar"}
 					]`,
 				},
+			},
+		},
+		{
+			title:   "the request body is nil",
+			req:     &http.Request{},
+			service: &Service{},
+			route: &Route{
+				Tester: &Tester{},
 			},
 		},
 	}
