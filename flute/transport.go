@@ -94,15 +94,9 @@ func makeNoMatchedRouteMsg(t *testing.T, req *http.Request) string {
 }
 
 func noMatchedRouteRoundTrip(t *testing.T, req *http.Request) (*http.Response, error) {
-	if t == nil {
-		return &http.Response{
-			Request:    req,
-			StatusCode: 404,
-			Body:       ioutil.NopCloser(strings.NewReader(`{"message": "no route matches the request"}`)),
-		}, nil
+	if t != nil {
+		require.Fail(t, makeNoMatchedRouteMsg(t, req))
 	}
-
-	require.Fail(t, makeNoMatchedRouteMsg(t, req))
 	return &http.Response{
 		Request:    req,
 		StatusCode: 404,
