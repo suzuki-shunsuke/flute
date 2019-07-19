@@ -68,7 +68,7 @@ func testBodyString(
 
 	if req.Body == nil {
 		assert.Equal(
-			t, tester.BodyString, nil,
+			t, tester.BodyString, "",
 			makeMsg("request body should match", srv, reqName))
 		return
 	}
@@ -145,7 +145,7 @@ func testBodyJSONString(
 
 	if req.Body == nil {
 		assert.Equal(
-			t, tester.BodyString, nil,
+			t, tester.BodyString, "",
 			makeMsg("request body should match", srv, reqName))
 		return
 	}
