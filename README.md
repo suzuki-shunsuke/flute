@@ -1,5 +1,6 @@
 # flute
 
+[![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)
 [![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](http://godoc.org/github.com/suzuki-shunsuke/flute/flute)
 [![Build Status](https://cloud.drone.io/api/badges/suzuki-shunsuke/flute/status.svg)](https://cloud.drone.io/suzuki-shunsuke/flute)
 [![codecov](https://codecov.io/gh/suzuki-shunsuke/flute/branch/master/graph/badge.svg)](https://codecov.io/gh/suzuki-shunsuke/flute)
