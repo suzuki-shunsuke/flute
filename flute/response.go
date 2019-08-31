@@ -31,6 +31,15 @@ func createHTTPResponse(req *http.Request, resp *Response) (*http.Response, erro
 	if len(resp.Header) != 0 {
 		r.Header = resp.Header
 	}
+	if body == nil {
+		// https://golang.org/pkg/net/http/#Response
+		// The http Client and Transport guarantee that Body is always
+		// non-nil, even on responses without a body or responses with
+		// a zero-length body. It is the caller's responsibility to
+		// close Body.
+		body = ioutil.NopCloser(strings.NewReader(""))
+	}
+
 	r.Body = body
 	return &r, nil
 }
