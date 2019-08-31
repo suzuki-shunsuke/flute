@@ -29,7 +29,7 @@ func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
 		}
 	}
 	if matcher.Method != "" {
-		if strings.ToUpper(matcher.Method) != strings.ToUpper(req.Method) {
+		if !strings.EqualFold(matcher.Method, req.Method) {
 			return false, nil
 		}
 	}

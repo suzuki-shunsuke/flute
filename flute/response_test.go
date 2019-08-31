@@ -38,7 +38,9 @@ func Test_createHTTPResponse(t *testing.T) {
 					"FOO": []string{"foo"},
 				},
 			},
-			exp:  &http.Response{},
+			exp: &http.Response{
+				Body: ioutil.NopCloser(strings.NewReader(`{"foo":"bar"}`)),
+			},
 			body: `{"foo":"bar"}`,
 		},
 		{
@@ -55,8 +57,18 @@ func Test_createHTTPResponse(t *testing.T) {
 			resp: &Response{
 				BodyString: `{"foo":"bar"}`,
 			},
-			exp:  &http.Response{},
+			exp: &http.Response{
+				Body: ioutil.NopCloser(strings.NewReader(`{"foo":"bar"}`)),
+			},
 			body: `{"foo":"bar"}`,
+		},
+		{
+			title: "nil request body",
+			req:   &http.Request{},
+			resp:  &Response{},
+			exp: &http.Response{
+				Body: ioutil.NopCloser(strings.NewReader("")),
+			},
 		},
 		{
 			title: "resp.Response",
@@ -70,6 +82,7 @@ func Test_createHTTPResponse(t *testing.T) {
 				},
 			},
 			exp: &http.Response{
+				Body:       ioutil.NopCloser(strings.NewReader("foo")),
 				StatusCode: 403,
 			},
 			body: "foo",
@@ -85,6 +98,13 @@ func Test_createHTTPResponse(t *testing.T) {
 			}
 			require.Nil(t, err)
 			require.NotNil(t, resp)
+
+			// https://golang.org/pkg/net/http/#Response
+			// The http Client and Transport guarantee that Body is always
+			// non-nil, even on responses without a body or responses with
+			// a zero-length body.
+			require.NotNil(t, resp.Body)
+
 			require.Equal(t, d.exp.StatusCode, resp.StatusCode)
 			b, err := ioutil.ReadAll(resp.Body)
 			require.Nil(t, err)

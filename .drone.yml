@@ -33,7 +33,7 @@ steps:
   commands:
   - sh scripts/durl.sh
 - name: download go modules
-  image: &image_go golang:1.12.6
+  image: &image_go golang:1.12.9
   commands:
   - go mod download
   environment:
@@ -47,7 +47,7 @@ steps:
     GO111MODULE: on
     GOPATH: /go
 - name: codecov
-  image: golang:1.12.6
+  image: *image_go
   commands:
   # bash and cgo seem to be required
   - bash scripts/codecov-test.sh
