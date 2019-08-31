@@ -5,4 +5,5 @@ ignore_urls:
 - https://codecov.io/bash  # sometimes returns 503
 ignore_hosts:
 - hello.example.com
+- goreportcard.com
 max_failed_request_count: -1
