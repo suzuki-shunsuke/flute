@@ -97,15 +97,11 @@ type (
 		Base http.Response
 		// If Response isn't nil, Response is called to return the response and other parameters are ignored.
 		Response func(req *http.Request) (*http.Response, error)
-		// StatusCode is the response's status code.
-		StatusCode int
 		// BodyJSON is marshaled to JSON and used as the response body.
 		// BodyJSON and BodyString should only be set to one or the other.
 		BodyJSON interface{}
 		// BodyString is the response body.
 		// BodyJSON and BodyString should only be set to one or the other.
 		BodyString string
-		// Header is the response headers.
-		Header http.Header
 	}
 )

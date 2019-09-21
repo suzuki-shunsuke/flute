@@ -28,9 +28,6 @@ func createHTTPResponse(req *http.Request, resp *Response) (*http.Response, erro
 	if resp.BodyString != "" {
 		body = ioutil.NopCloser(strings.NewReader(resp.BodyString))
 	}
-	if len(resp.Header) != 0 {
-		r.Header = resp.Header
-	}
 	if body == nil {
 		// https://golang.org/pkg/net/http/#Response
 		// The http Client and Transport guarantee that Body is always

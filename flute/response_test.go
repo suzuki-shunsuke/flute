@@ -31,11 +31,13 @@ func Test_createHTTPResponse(t *testing.T) {
 			title: "body json isn't nil",
 			req:   &http.Request{},
 			resp: &Response{
+				Base: http.Response{
+					Header: http.Header{
+						"FOO": []string{"foo"},
+					},
+				},
 				BodyJSON: map[string]interface{}{
 					"foo": "bar",
-				},
-				Header: http.Header{
-					"FOO": []string{"foo"},
 				},
 			},
 			exp: &http.Response{
