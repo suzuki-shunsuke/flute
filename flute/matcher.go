@@ -1,12 +1,12 @@
 package flute
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"reflect"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/suzuki-shunsuke/go-jsoneq/jsoneq"
 )
 
@@ -119,7 +119,7 @@ func isMatchBodyString(req *http.Request, matcher *Matcher) (bool, error) {
 	}
 	b, err := ioutil.ReadAll(req.Body)
 	if err != nil {
-		return false, errors.Wrap(err, "failed to read the request body")
+		return false, fmt.Errorf("failed to read the request body: %w", err)
 	}
 	if matcher.BodyString != string(b) {
 		return false, nil
@@ -133,7 +133,7 @@ func isMatchBodyJSONString(req *http.Request, matcher *Matcher) (bool, error) {
 	}
 	b, err := ioutil.ReadAll(req.Body)
 	if err != nil {
-		return false, errors.Wrap(err, "failed to read the request body")
+		return false, fmt.Errorf("failed to read the request body: %w", err)
 	}
 	return jsoneq.Equal(b, []byte(matcher.BodyJSONString))
 }
@@ -144,7 +144,7 @@ func isMatchBodyJSON(req *http.Request, matcher *Matcher) (bool, error) {
 	}
 	b, err := ioutil.ReadAll(req.Body)
 	if err != nil {
-		return false, errors.Wrap(err, "failed to read the request body")
+		return false, fmt.Errorf("failed to read the request body: %w", err)
 	}
 	return jsoneq.Equal(b, matcher.BodyJSON)
 }
