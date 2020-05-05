@@ -8,6 +8,7 @@ github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
+github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
 github.com/suzuki-shunsuke/go-cliutil v0.0.0-20181211154308-176f852d9bca/go.mod h1:Vq3NkhgmA9DT/2UZ08x/3A34xxvzQ/vTMABnTWKoMbY=
 github.com/suzuki-shunsuke/go-jsoneq v0.1.1 h1:A9ik3qCfjjR2zbOTHwOIIt+N4ItZGZq9j8z//t5EhnQ=
 github.com/suzuki-shunsuke/go-jsoneq v0.1.1/go.mod h1:vbOEb6bPf8nD+QASKzxtQ/vfVGgAyfWHyItUaUTwJWk=
