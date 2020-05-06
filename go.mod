@@ -4,6 +4,6 @@ go 1.13
 
 require (
 	github.com/stretchr/testify v1.5.1
-	github.com/suzuki-shunsuke/go-jsoneq v0.1.1
+	github.com/suzuki-shunsuke/go-jsoneq v0.1.2
 	github.com/suzuki-shunsuke/gomic v0.6.0
 )
