@@ -12,23 +12,19 @@ steps:
   commands:
   - sh scripts/durl.sh
 - name: download go modules
-  image: &image_go golang:1.13.4
+  image: golang:1.14.2
   commands:
   - go mod download
   volumes: &volumes
   - name: gopath
     path: /go
-  environment:
-    GOPATH: /go
 - name: golangci-lint
   image: golangci/golangci-lint:v1.26.0-alpine
   commands:
   - golangci-lint run
   volumes: *volumes
-  environment:
-    GOPATH: /go
 - name: codecov
-  image: *image_go
+  image: golang:1.14.2
   commands:
   # bash and cgo seem to be required
   - bash scripts/codecov-test.sh
@@ -36,6 +32,5 @@ steps:
   - test "$LOCAL" = "true" -o "$DRONE_BUILD_EVENT" = "pull_request" || bash /tmp/codecov.sh
   volumes: *volumes
   environment:
-    GOPATH: /go
     CODECOV_TOKEN:
       from_secret: codecov_token
