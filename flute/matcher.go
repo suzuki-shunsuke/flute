@@ -18,7 +18,7 @@ func isMatchService(req *http.Request, service *Service) bool {
 
 // isMatch returns whether the request matches with the matcher.
 // If the matcher has multiple conditions, IsMatch returns true if the request meets all conditions.
-func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
+func isMatch(req *http.Request, matcher *Matcher) (bool, error) { //nolint:gocognit
 	if matcher == nil {
 		// SPEC if the matcher is nil, the route matches the request.
 		return true, nil
@@ -52,9 +52,8 @@ func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
 		}
 	}
 	if matcher.PartOfHeader != nil {
-		f, err := isMatchPartOfHeader(req, matcher)
-		if err != nil || !f {
-			return f, err
+		if !isMatchPartOfHeader(req, matcher) {
+			return false, nil
 		}
 	}
 	if matcher.Header != nil {
@@ -63,9 +62,8 @@ func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
 		}
 	}
 	if matcher.PartOfQuery != nil {
-		f, err := isMatchPartOfQuery(req, matcher)
-		if err != nil || !f {
-			return f, err
+		if !isMatchPartOfQuery(req, matcher) {
+			return false, nil
 		}
 	}
 	if matcher.Query != nil {
@@ -82,35 +80,35 @@ func isMatch(req *http.Request, matcher *Matcher) (bool, error) {
 	return true, nil
 }
 
-func isMatchPartOfHeader(req *http.Request, matcher *Matcher) (bool, error) {
+func isMatchPartOfHeader(req *http.Request, matcher *Matcher) bool {
 	for k, v := range matcher.PartOfHeader {
 		a, ok := req.Header[k]
 		if !ok {
-			return false, nil
+			return false
 		}
 		if v != nil {
 			if !reflect.DeepEqual(a, v) {
-				return false, nil
+				return false
 			}
 		}
 	}
-	return true, nil
+	return true
 }
 
-func isMatchPartOfQuery(req *http.Request, matcher *Matcher) (bool, error) {
+func isMatchPartOfQuery(req *http.Request, matcher *Matcher) bool {
 	query := req.URL.Query()
 	for k, v := range matcher.PartOfQuery {
 		a, ok := query[k]
 		if !ok {
-			return false, nil
+			return false
 		}
 		if v != nil {
 			if !reflect.DeepEqual(a, v) {
-				return false, nil
+				return false
 			}
 		}
 	}
-	return true, nil
+	return true
 }
 
 func isMatchBodyString(req *http.Request, matcher *Matcher) (bool, error) {

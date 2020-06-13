@@ -1,24 +1,25 @@
-package flute
+package flute_test
 
 import (
 	"errors"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/suzuki-shunsuke/flute/flute"
 	"github.com/suzuki-shunsuke/gomic/gomic"
 )
 
-func TestTransport_RoundTrip(t *testing.T) {
+func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 	token := "XXXXX"
 	data := []struct {
 		title     string
 		req       *http.Request
-		transport *Transport
+		transport *flute.Transport
 		isErr     bool
 		exp       *http.Response
 	}{
@@ -36,27 +37,27 @@ func TestTransport_RoundTrip(t *testing.T) {
 					"Authorization": []string{"token " + token},
 				},
 			},
-			transport: &Transport{
+			transport: &flute.Transport{
 				T: t,
-				Services: []Service{
+				Services: []flute.Service{
 					{
 						Endpoint: "http://example.org",
 					},
 					{
 						Endpoint: "http://example.com",
-						Routes: []Route{
+						Routes: []flute.Route{
 							{
-								Matcher: &Matcher{
+								Matcher: &flute.Matcher{
 									Method: "GET",
 								},
 							},
 							{
 								Name: "create a user",
-								Matcher: &Matcher{
+								Matcher: &flute.Matcher{
 									Method: "POST",
 									Path:   "/users",
 								},
-								Tester: &Tester{
+								Tester: &flute.Tester{
 									BodyJSONString: `{
 										  "name": "foo",
 										  "email": "foo@example.com"
@@ -65,7 +66,7 @@ func TestTransport_RoundTrip(t *testing.T) {
 										"Authorization": []string{"token " + token},
 									},
 								},
-								Response: &Response{
+								Response: &flute.Response{
 									Base: http.Response{
 										StatusCode: 201,
 									},
@@ -98,13 +99,13 @@ func TestTransport_RoundTrip(t *testing.T) {
 					"Authorization": []string{"token " + token},
 				},
 			},
-			transport: &Transport{
-				Services: []Service{
+			transport: &flute.Transport{
+				Services: []flute.Service{
 					{
 						Endpoint: "http://example.com",
-						Routes: []Route{
+						Routes: []flute.Route{
 							{
-								Matcher: &Matcher{
+								Matcher: &flute.Matcher{
 									Match: func(req *http.Request) (bool, error) {
 										return false, errors.New("failed to match")
 									},
@@ -113,7 +114,7 @@ func TestTransport_RoundTrip(t *testing.T) {
 						},
 					},
 				},
-				Transport: NewMockRoundTripper(t, gomic.DoNothing).
+				Transport: flute.NewMockRoundTripper(t, gomic.DoNothing).
 					SetReturnRoundTrip(&http.Response{
 						StatusCode: 401,
 					}, nil),
@@ -136,14 +137,14 @@ func TestTransport_RoundTrip(t *testing.T) {
 					"Authorization": []string{"token " + token},
 				},
 			},
-			transport: &Transport{
+			transport: &flute.Transport{
 				T: t,
-				Services: []Service{
+				Services: []flute.Service{
 					{
 						Endpoint: "http://example.com",
-						Routes: []Route{
+						Routes: []flute.Route{
 							{
-								Matcher: &Matcher{
+								Matcher: &flute.Matcher{
 									Match: func(req *http.Request) (bool, error) {
 										return false, errors.New("failed to match")
 									},
@@ -152,7 +153,7 @@ func TestTransport_RoundTrip(t *testing.T) {
 						},
 					},
 				},
-				Transport: NewMockRoundTripper(t, gomic.DoNothing).
+				Transport: flute.NewMockRoundTripper(t, gomic.DoNothing).
 					SetReturnRoundTrip(&http.Response{
 						StatusCode: 401,
 					}, nil),
@@ -175,13 +176,13 @@ func TestTransport_RoundTrip(t *testing.T) {
 					"Authorization": []string{"token " + token},
 				},
 			},
-			transport: &Transport{
-				Services: []Service{
+			transport: &flute.Transport{
+				Services: []flute.Service{
 					{
 						Endpoint: "http://example.com",
-						Routes: []Route{
+						Routes: []flute.Route{
 							{
-								Matcher: &Matcher{
+								Matcher: &flute.Matcher{
 									Match: func(req *http.Request) (bool, error) {
 										return false, errors.New("failed to match")
 									},
@@ -198,8 +199,8 @@ func TestTransport_RoundTrip(t *testing.T) {
 		{
 			title: "transport.Transport is called",
 			req:   &http.Request{},
-			transport: &Transport{
-				Transport: NewMockRoundTripper(t, gomic.DoNothing).
+			transport: &flute.Transport{
+				Transport: flute.NewMockRoundTripper(t, gomic.DoNothing).
 					SetReturnRoundTrip(&http.Response{
 						StatusCode: 401,
 					}, nil),
@@ -211,8 +212,13 @@ func TestTransport_RoundTrip(t *testing.T) {
 	}
 
 	for _, d := range data {
+		d := d
 		t.Run(d.title, func(t *testing.T) {
 			resp, err := d.transport.RoundTrip(d.req)
+			if resp != nil && resp.Body != nil {
+				_, _ = io.Copy(ioutil.Discard, resp.Body)
+				resp.Body.Close()
+			}
 			if d.isErr {
 				require.NotNil(t, err)
 				return
@@ -221,76 +227,4 @@ func TestTransport_RoundTrip(t *testing.T) {
 			require.Equal(t, d.exp.StatusCode, resp.StatusCode)
 		})
 	}
-}
-
-func Test_makeNoMatchedRouteMsg(t *testing.T) {
-	data := []struct {
-		title string
-		req   *http.Request
-		exp   string
-	}{
-		{
-			title: "normal",
-			req: &http.Request{
-				URL: &url.URL{
-					Scheme:   "http",
-					Host:     "example.com",
-					Path:     "/users",
-					RawQuery: "print=true",
-				},
-				Method: "POST",
-				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
-				Header: http.Header{
-					"Authorization": []string{"token XXXXX"},
-				},
-			},
-			exp: `no route matches the request.
-url: http://example.com/users?print=true
-method: POST
-query:
-  print: true
-header:
-  Authorization: token XXXXX
-body:
-{"name": "foo", "email": "foo@example.com"}`,
-		},
-	}
-
-	for _, d := range data {
-		t.Run(d.title, func(t *testing.T) {
-			require.Equal(t, d.exp, makeNoMatchedRouteMsg(t, d.req))
-		})
-	}
-}
-
-func Test_noMatchedRouteRoundTrip(t *testing.T) {
-	data := []struct {
-		t          *testing.T
-		title      string
-		req        *http.Request
-		statusCode int
-		isErr      bool
-	}{
-		{
-			t:     nil,
-			title: "normal",
-			req: &http.Request{
-				URL: &url.URL{},
-			},
-			statusCode: 404,
-		},
-	}
-
-	for _, d := range data {
-		t.Run(d.title, func(t *testing.T) {
-			resp, err := noMatchedRouteRoundTrip(d.t, d.req)
-			if d.isErr {
-				assert.NotNil(t, err)
-				return
-			}
-			assert.Nil(t, err)
-			require.Equal(t, d.statusCode, resp.StatusCode)
-		})
-	}
-
 }
