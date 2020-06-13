@@ -18,7 +18,7 @@ func (*invalidMarshaler) MarshalJSON() ([]byte, error) {
 	return nil, errors.New("failed to marshal JSON")
 }
 
-func Test_createHTTPResponse(t *testing.T) {
+func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 	data := []struct {
 		title string
 		req   *http.Request
@@ -92,8 +92,16 @@ func Test_createHTTPResponse(t *testing.T) {
 	}
 
 	for _, d := range data {
+		d := d
 		t.Run(d.title, func(t *testing.T) {
 			resp, err := createHTTPResponse(d.req, d.resp)
+			var b []byte
+			if resp != nil && resp.Body != nil {
+				var err error
+				b, err = ioutil.ReadAll(resp.Body)
+				resp.Body.Close()
+				require.Nil(t, err)
+			}
 			if d.isErr {
 				require.NotNil(t, err)
 				return
@@ -108,8 +116,6 @@ func Test_createHTTPResponse(t *testing.T) {
 			require.NotNil(t, resp.Body)
 
 			require.Equal(t, d.exp.StatusCode, resp.StatusCode)
-			b, err := ioutil.ReadAll(resp.Body)
-			require.Nil(t, err)
 			require.Equal(t, d.body, string(b))
 		})
 	}

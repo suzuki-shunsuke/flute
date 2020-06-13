@@ -20,7 +20,7 @@ func createHTTPResponse(req *http.Request, resp *Response) (*http.Response, erro
 		if err != nil {
 			return &http.Response{
 				Request:    req,
-				StatusCode: 500,
+				StatusCode: http.StatusInternalServerError,
 			}, err
 		}
 		body = ioutil.NopCloser(strings.NewReader(string(b)))

@@ -28,6 +28,7 @@ func Test_isMatchService(t *testing.T) {
 	}
 
 	for _, d := range data {
+		d := d
 		t.Run(d.title, func(t *testing.T) {
 			b := isMatchService(&http.Request{
 				URL: &url.URL{
@@ -46,7 +47,7 @@ func Test_isMatchService(t *testing.T) {
 	}
 }
 
-func Test_isMatch(t *testing.T) {
+func Test_isMatch(t *testing.T) { //nolint:funlen
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -174,6 +175,7 @@ func Test_isMatch(t *testing.T) {
 	}
 
 	for _, d := range data {
+		d := d
 		t.Run(d.title, func(t *testing.T) {
 			b, err := isMatch(d.req, d.matcher)
 			if d.isErr {
@@ -195,7 +197,6 @@ func Test_isMatchPartOfQuery(t *testing.T) {
 		title   string
 		req     *http.Request
 		matcher *Matcher
-		isErr   bool
 		exp     bool
 	}{
 		{
@@ -239,13 +240,9 @@ func Test_isMatchPartOfQuery(t *testing.T) {
 	}
 
 	for _, d := range data {
+		d := d
 		t.Run(d.title, func(t *testing.T) {
-			b, err := isMatchPartOfQuery(d.req, d.matcher)
-			if d.isErr {
-				require.NotNil(t, err)
-				return
-			}
-			require.Nil(t, err)
+			b := isMatchPartOfQuery(d.req, d.matcher)
 			if d.exp {
 				require.True(t, b)
 				return
@@ -260,7 +257,6 @@ func Test_isMatchPartOfHeader(t *testing.T) {
 		title   string
 		req     *http.Request
 		matcher *Matcher
-		isErr   bool
 		exp     bool
 	}{
 		{
@@ -304,13 +300,9 @@ func Test_isMatchPartOfHeader(t *testing.T) {
 	}
 
 	for _, d := range data {
+		d := d
 		t.Run(d.title, func(t *testing.T) {
-			b, err := isMatchPartOfHeader(d.req, d.matcher)
-			if d.isErr {
-				require.NotNil(t, err)
-				return
-			}
-			require.Nil(t, err)
+			b := isMatchPartOfHeader(d.req, d.matcher)
 			if d.exp {
 				require.True(t, b)
 				return
@@ -320,7 +312,7 @@ func Test_isMatchPartOfHeader(t *testing.T) {
 	}
 }
 
-func Test_isMatchBodyString(t *testing.T) {
+func Test_isMatchBodyString(t *testing.T) { //nolint:dupl
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -354,6 +346,7 @@ func Test_isMatchBodyString(t *testing.T) {
 	}
 
 	for _, d := range data {
+		d := d
 		t.Run(d.title, func(t *testing.T) {
 			b, err := isMatchBodyString(d.req, d.matcher)
 			if d.isErr {
@@ -370,7 +363,7 @@ func Test_isMatchBodyString(t *testing.T) {
 	}
 }
 
-func Test_isMatchBodyJSONString(t *testing.T) {
+func Test_isMatchBodyJSONString(t *testing.T) { //nolint:dupl
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -404,6 +397,7 @@ func Test_isMatchBodyJSONString(t *testing.T) {
 	}
 
 	for _, d := range data {
+		d := d
 		t.Run(d.title, func(t *testing.T) {
 			b, err := isMatchBodyJSONString(d.req, d.matcher)
 			if d.isErr {
@@ -454,6 +448,7 @@ func Test_isMatchBodyJSON(t *testing.T) {
 	}
 
 	for _, d := range data {
+		d := d
 		t.Run(d.title, func(t *testing.T) {
 			b, err := isMatchBodyJSON(d.req, d.matcher)
 			if d.isErr {
