@@ -1,7 +1,7 @@
 # flute
 
 [![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)
-[![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](http://godoc.org/github.com/suzuki-shunsuke/flute/flute)
+[![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://pkg.go.dev/github.com/suzuki-shunsuke/flute/flute)
 [![Build Status](https://cloud.drone.io/api/badges/suzuki-shunsuke/flute/status.svg)](https://cloud.drone.io/suzuki-shunsuke/flute)
 [![codecov](https://codecov.io/gh/suzuki-shunsuke/flute/branch/master/graph/badge.svg)](https://codecov.io/gh/suzuki-shunsuke/flute)
 [![Go Report Card](https://goreportcard.com/badge/github.com/suzuki-shunsuke/flute)](https://goreportcard.com/report/github.com/suzuki-shunsuke/flute)
@@ -14,10 +14,6 @@ Golang HTTP client testing framework
 ## Presentation
 
 https://speakerdeck.com/szksh/flute-golang-http-client-testing-framework
-
-## Note: This project name was changed
-
-Please see https://github.com/suzuki-shunsuke/flute/issues/20 .
 
 ## Overview
 
@@ -65,7 +61,7 @@ For example, the following test failure message means the request header is unex
                                 request name: create a user
 ```
 
-You can define test cases declaratively. Please see [the example](https://github.com/suzuki-shunsuke/flute/blob/v0.6.0/examples/create_user_test.go#L21-L48).
+Please see [the example](https://github.com/suzuki-shunsuke/flute/blob/v0.6.0/examples/create_user_test.go#L21-L48).
 
 ## Example
 
