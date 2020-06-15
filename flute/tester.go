@@ -15,6 +15,7 @@ type testFunc func(t *testing.T, req *http.Request, service Service, route Route
 
 var testFuncs = [...]testFunc{ //nolint:gochecknoglobals
 	testPath, testMethod, testBodyString, testBodyJSON,
+	testBodyJSONString,
 }
 
 func testRequest(t *testing.T, req *http.Request, service Service, route Route) {
@@ -22,9 +23,6 @@ func testRequest(t *testing.T, req *http.Request, service Service, route Route) 
 		fn(t, req, service, route)
 	}
 	tester := route.Tester
-	if tester.BodyJSONString != "" {
-		testBodyJSONString(t, req, service, route)
-	}
 	if tester.PartOfHeader != nil {
 		testPartOfHeader(t, req, service, route)
 	}
@@ -126,17 +124,15 @@ func testBodyJSON(t *testing.T, req *http.Request, service Service, route Route)
 		makeMsg("request body should match", service.Endpoint, route.Name))
 }
 
-func testBodyJSONString(
-	t *testing.T, req *http.Request, service Service, route Route,
-) {
-	reqName := route.Name
-	srv := service.Endpoint
-	tester := route.Tester
+func testBodyJSONString(t *testing.T, req *http.Request, service Service, route Route) {
+	if route.Tester.BodyJSONString == "" {
+		return
+	}
 
 	if req.Body == nil {
 		assert.Equal(
-			t, tester.BodyString, "",
-			makeMsg("request body should match", srv, reqName))
+			t, route.Tester.BodyString, "",
+			makeMsg("request body should match", service.Endpoint, route.Name))
 		return
 	}
 	b, err := ioutil.ReadAll(req.Body)
@@ -144,12 +140,12 @@ func testBodyJSONString(
 		assert.Fail(
 			t, makeMsg(
 				fmt.Sprintf("failed to read the request body: %v", err),
-				srv, reqName))
+				service.Endpoint, route.Name))
 		return
 	}
 	assert.JSONEqf(
-		t, tester.BodyJSONString, string(b),
-		makeMsg("request body should match", srv, reqName))
+		t, route.Tester.BodyJSONString, string(b),
+		makeMsg("request body should match", service.Endpoint, route.Name))
 }
 
 func testPartOfHeader(t *testing.T, req *http.Request, service Service, route Route) {
