@@ -14,7 +14,7 @@ import (
 type testFunc func(t *testing.T, req *http.Request, service Service, route Route)
 
 var testFuncs = [...]testFunc{ //nolint:gochecknoglobals
-	testPath, testMethod, testBodyString,
+	testPath, testMethod, testBodyString, testBodyJSON,
 }
 
 func testRequest(t *testing.T, req *http.Request, service Service, route Route) {
@@ -22,9 +22,6 @@ func testRequest(t *testing.T, req *http.Request, service Service, route Route) 
 		fn(t, req, service, route)
 	}
 	tester := route.Tester
-	if tester.BodyJSON != nil {
-		testBodyJSON(t, req, service, route)
-	}
 	if tester.BodyJSONString != "" {
 		testBodyJSONString(t, req, service, route)
 	}
@@ -99,34 +96,34 @@ func testMethod(t *testing.T, req *http.Request, service Service, route Route) {
 }
 
 func testBodyJSON(t *testing.T, req *http.Request, service Service, route Route) {
-	reqName := route.Name
-	srv := service.Endpoint
-	tester := route.Tester
+	if route.Tester.BodyJSON == nil {
+		return
+	}
 
 	if req.Body == nil {
 		assert.Equal(
-			t, tester.BodyJSON, nil,
-			makeMsg("request body should match", srv, reqName))
+			t, route.Tester.BodyJSON, nil,
+			makeMsg("request body should match", service.Endpoint, route.Name))
 		return
 	}
 	b, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		assert.Fail(
 			t, makeMsg(
-				fmt.Sprintf("failed to read the request body: %v", err), srv, reqName))
+				fmt.Sprintf("failed to read the request body: %v", err), service.Endpoint, route.Name))
 		return
 	}
-	c, err := json.Marshal(tester.BodyJSON)
+	c, err := json.Marshal(route.Tester.BodyJSON)
 	if err != nil {
 		assert.Fail(
 			t, makeMsg(
-				fmt.Sprintf("failed to parse tester.bodyJSON as JSON: %v", err),
-				srv, reqName))
+				fmt.Sprintf("failed to parse route.Tester.bodyJSON as JSON: %v", err),
+				service.Endpoint, route.Name))
 		return
 	}
 	assert.JSONEqf(
 		t, string(c), string(b),
-		makeMsg("request body should match", srv, reqName))
+		makeMsg("request body should match", service.Endpoint, route.Name))
 }
 
 func testBodyJSONString(
