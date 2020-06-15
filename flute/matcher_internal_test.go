@@ -754,6 +754,9 @@ func Test_isMatchBodyJSON(t *testing.T) {
 		{
 			title: "request body is nil",
 			req:   &http.Request{},
+			matcher: Matcher{
+				BodyJSON: map[string]interface{}{"name": "foo"},
+			},
 		},
 		{
 			title: "request body json matches",

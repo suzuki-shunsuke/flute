@@ -27,20 +27,14 @@ func matchMethod(req *http.Request, matcher Matcher) (bool, error) {
 }
 
 var matchFuncs = [...]matchFunc{ //nolint:gochecknoglobals
-	matchPath, matchMethod, isMatchBodyString,
+	matchPath, matchMethod, isMatchBodyString, isMatchBodyJSON,
 }
 
 // isMatch returns whether the request matches with the matcher.
 // If the matcher has multiple conditions, IsMatch returns true if the request meets all conditions.
-func isMatch(req *http.Request, matcher Matcher) (bool, error) { //nolint:gocognit
+func isMatch(req *http.Request, matcher Matcher) (bool, error) {
 	for _, match := range matchFuncs {
 		if f, err := match(req, matcher); err != nil || !f {
-			return f, err
-		}
-	}
-	if matcher.BodyJSON != nil {
-		f, err := isMatchBodyJSON(req, matcher)
-		if err != nil || !f {
 			return f, err
 		}
 	}
@@ -136,6 +130,9 @@ func isMatchBodyJSONString(req *http.Request, matcher Matcher) (bool, error) {
 }
 
 func isMatchBodyJSON(req *http.Request, matcher Matcher) (bool, error) {
+	if matcher.BodyJSON == nil {
+		return true, nil
+	}
 	if req.Body == nil {
 		return false, nil
 	}
