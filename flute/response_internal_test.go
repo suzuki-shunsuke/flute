@@ -2,6 +2,7 @@ package flute
 
 import (
 	"errors"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -117,6 +118,79 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 
 			require.Equal(t, d.exp.StatusCode, resp.StatusCode)
 			require.Equal(t, d.body, string(b))
+		})
+	}
+}
+
+func Benchmark_createHTTPResponse(b *testing.B) { //nolint:funlen
+	data := []struct {
+		title string
+		req   *http.Request
+		resp  *Response
+		isErr bool
+		body  string
+	}{
+		{
+			title: "body json isn't nil",
+			req:   &http.Request{},
+			resp: &Response{
+				Base: http.Response{
+					Header: http.Header{
+						"FOO": []string{"foo"},
+					},
+				},
+				BodyJSON: map[string]interface{}{
+					"foo": "bar",
+				},
+			},
+			body: `{"foo":"bar"}`,
+		},
+		{
+			title: "failed to marshal json",
+			req:   &http.Request{},
+			resp: &Response{
+				BodyJSON: &invalidMarshaler{},
+			},
+			isErr: true,
+		},
+		{
+			title: "body string isn't nil",
+			req:   &http.Request{},
+			resp: &Response{
+				BodyString: `{"foo":"bar"}`,
+			},
+			body: `{"foo":"bar"}`,
+		},
+		{
+			title: "nil request body",
+			req:   &http.Request{},
+			resp:  &Response{},
+		},
+		{
+			title: "resp.Response",
+			req:   &http.Request{},
+			resp: &Response{
+				Response: func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						Body:       ioutil.NopCloser(strings.NewReader("foo")),
+						StatusCode: 403,
+					}, nil
+				},
+			},
+			body: "foo",
+		},
+	}
+
+	for _, d := range data {
+		d := d
+		b.Run(d.title, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				resp, _ := createHTTPResponse(d.req, d.resp)
+				if resp != nil && resp.Body != nil {
+					_, _ = io.Copy(ioutil.Discard, resp.Body)
+					resp.Body.Close()
+				}
+			}
 		})
 	}
 }

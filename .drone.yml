@@ -23,6 +23,12 @@ steps:
   commands:
   - golangci-lint run
   volumes: *volumes
+- name: benchmark
+  image: golang:1.14.4
+  commands:
+  - cd flute
+  - go test -bench=. -benchmem
+  volumes: *volumes
 - name: codecov
   image: golang:1.14.4
   commands:
