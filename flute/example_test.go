@@ -1,4 +1,4 @@
-package examples
+package flute_test
 
 import (
 	"fmt"
