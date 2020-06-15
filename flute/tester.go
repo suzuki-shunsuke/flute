@@ -13,10 +13,6 @@ import (
 
 func testRequest(t *testing.T, req *http.Request, service Service, route Route) {
 	tester := route.Tester
-	if tester == nil {
-		// SPEC if the tester is nil, do nothing.
-		return
-	}
 	if tester.Path != "" {
 		testPath(t, req, service, route)
 	}

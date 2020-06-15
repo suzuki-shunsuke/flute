@@ -51,7 +51,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 			},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{
+				Tester: Tester{
 					Method: "POST",
 					Path:   "/users",
 					BodyJSONString: `{
@@ -83,7 +83,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 			},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{
+				Tester: Tester{
 					BodyString: `foo`,
 				},
 			},
@@ -95,7 +95,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 			},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{
+				Tester: Tester{
 					BodyJSON: []map[string]interface{}{
 						{
 							"name": "foo",
@@ -155,7 +155,7 @@ func Test_testBodyString(t *testing.T) {
 			},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{
+				Tester: Tester{
 					BodyString: `"foo"`,
 				},
 			},
@@ -165,7 +165,7 @@ func Test_testBodyString(t *testing.T) {
 			req:     &http.Request{},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{
+				Tester: Tester{
 					BodyString: "",
 				},
 			},
@@ -196,7 +196,7 @@ func Test_testPath(t *testing.T) {
 			},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{
+				Tester: Tester{
 					Path: "/foo",
 				},
 			},
@@ -225,7 +225,7 @@ func Test_testMethod(t *testing.T) {
 			},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{
+				Tester: Tester{
 					Method: "put",
 				},
 			},
@@ -254,7 +254,7 @@ func Test_testBodyJSON(t *testing.T) {
 			},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{
+				Tester: Tester{
 					BodyJSON: []map[string]string{
 						{
 							"foo": "bar",
@@ -268,7 +268,7 @@ func Test_testBodyJSON(t *testing.T) {
 			req:     &http.Request{},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{},
+				Tester: Tester{},
 			},
 		},
 	}
@@ -295,7 +295,7 @@ func Test_testBodyJSONString(t *testing.T) {
 			},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{
+				Tester: Tester{
 					BodyJSONString: `[
 					{"foo":"bar"}
 					]`,
@@ -307,7 +307,7 @@ func Test_testBodyJSONString(t *testing.T) {
 			req:     &http.Request{},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{},
+				Tester: Tester{},
 			},
 		},
 	}
@@ -337,7 +337,7 @@ func Test_testPartOfHeader(t *testing.T) {
 			},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{
+				Tester: Tester{
 					Header: http.Header{
 						"FOO": []string{"foo"},
 						"BAR": nil,
@@ -371,7 +371,7 @@ func Test_testPartOfQuery(t *testing.T) {
 			},
 			service: Service{},
 			route: Route{
-				Tester: &Tester{
+				Tester: Tester{
 					Query: url.Values{
 						"name": []string{"foo"},
 					},

@@ -1,4 +1,4 @@
-package examples
+package examples //nolint:testpackage
 
 import (
 	"net/http"
@@ -25,7 +25,7 @@ func TestClient_CreateUser(t *testing.T) {
 									Method: "POST",
 									Path:   "/users",
 								},
-								Tester: &flute.Tester{
+								Tester: flute.Tester{
 									BodyJSONString: `{
 										  "name": "foo",
 										  "email": "foo@example.com"

@@ -57,7 +57,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 									Method: "POST",
 									Path:   "/users",
 								},
-								Tester: &flute.Tester{
+								Tester: flute.Tester{
 									BodyJSONString: `{
 										  "name": "foo",
 										  "email": "foo@example.com"
@@ -250,7 +250,7 @@ func BenchmarkTransport_RoundTrip(b *testing.B) { //nolint:funlen
 							Method: "POST",
 							Path:   "/users",
 						},
-						Tester: &flute.Tester{
+						Tester: flute.Tester{
 							BodyJSONString: `{
 										  "name": "foo",
 										  "email": "foo@example.com"
