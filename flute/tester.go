@@ -11,11 +11,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type testFunc func(t *testing.T, req *http.Request, service Service, route Route)
+
+var testFuncs = [...]testFunc{ //nolint:gochecknoglobals
+	testPath,
+}
+
 func testRequest(t *testing.T, req *http.Request, service Service, route Route) {
-	tester := route.Tester
-	if tester.Path != "" {
-		testPath(t, req, service, route)
+	for _, fn := range testFuncs {
+		fn(t, req, service, route)
 	}
+	tester := route.Tester
 	if tester.Method != "" {
 		testMethod(t, req, service, route)
 	}
@@ -80,13 +86,12 @@ func testBodyString(t *testing.T, req *http.Request, service Service, route Rout
 }
 
 func testPath(t *testing.T, req *http.Request, service Service, route Route) {
-	reqName := route.Name
-	srv := service.Endpoint
-	tester := route.Tester
-
+	if route.Tester.Path == "" {
+		return
+	}
 	assert.Equal(
-		t, tester.Path, req.URL.Path,
-		makeMsg("request path should match", srv, reqName))
+		t, route.Tester.Path, req.URL.Path,
+		makeMsg("request path should match", service.Endpoint, route.Name))
 }
 
 func testMethod(t *testing.T, req *http.Request, service Service, route Route) {
