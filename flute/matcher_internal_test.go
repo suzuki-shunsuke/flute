@@ -324,12 +324,13 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 	}
 }
 
-func Test_isMatchPartOfQuery(t *testing.T) {
+func Test_isMatchPartOfQuery(t *testing.T) { //nolint:funlen
 	data := []struct {
 		title   string
 		req     *http.Request
 		matcher Matcher
 		exp     bool
+		isErr   bool
 	}{
 		{
 			title: "query value doesn't match",
@@ -374,7 +375,12 @@ func Test_isMatchPartOfQuery(t *testing.T) {
 	for _, d := range data {
 		d := d
 		t.Run(d.title, func(t *testing.T) {
-			b := isMatchPartOfQuery(d.req, d.matcher)
+			b, err := isMatchPartOfQuery(d.req, d.matcher)
+			if d.isErr {
+				require.NotNil(t, err)
+				return
+			}
+			require.Nil(t, err)
 			if d.exp {
 				require.True(t, b)
 				return
@@ -435,7 +441,7 @@ func Benchmark_isMatchPartOfQuery(b *testing.B) {
 		d := d
 		b.Run(d.title, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				isMatchPartOfQuery(d.req, d.matcher)
+				_, _ = isMatchPartOfQuery(d.req, d.matcher)
 			}
 		})
 	}

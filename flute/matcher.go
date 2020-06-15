@@ -32,7 +32,7 @@ func matchHeader(req *http.Request, matcher Matcher) (bool, error) {
 
 var matchFuncs = [...]matchFunc{ //nolint:gochecknoglobals
 	matchPath, matchMethod, isMatchBodyString, isMatchBodyJSON, isMatchBodyJSONString,
-	isMatchPartOfHeader, matchHeader,
+	isMatchPartOfHeader, matchHeader, isMatchPartOfQuery,
 }
 
 // isMatch returns whether the request matches with the matcher.
@@ -41,11 +41,6 @@ func isMatch(req *http.Request, matcher Matcher) (bool, error) {
 	for _, match := range matchFuncs {
 		if f, err := match(req, matcher); err != nil || !f {
 			return f, err
-		}
-	}
-	if matcher.PartOfQuery != nil {
-		if !isMatchPartOfQuery(req, matcher) {
-			return false, nil
 		}
 	}
 	if matcher.Query != nil {
@@ -77,20 +72,23 @@ func isMatchPartOfHeader(req *http.Request, matcher Matcher) (bool, error) {
 	return true, nil
 }
 
-func isMatchPartOfQuery(req *http.Request, matcher Matcher) bool {
+func isMatchPartOfQuery(req *http.Request, matcher Matcher) (bool, error) {
+	if matcher.PartOfQuery == nil {
+		return true, nil
+	}
 	query := req.URL.Query()
 	for k, v := range matcher.PartOfQuery {
 		a, ok := query[k]
 		if !ok {
-			return false
+			return false, nil
 		}
 		if v != nil {
 			if !reflect.DeepEqual(a, v) {
-				return false
+				return false, nil
 			}
 		}
 	}
-	return true
+	return true, nil
 }
 
 func isMatchBodyString(req *http.Request, matcher Matcher) (bool, error) {
