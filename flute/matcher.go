@@ -26,9 +26,13 @@ func matchMethod(req *http.Request, matcher Matcher) (bool, error) {
 	return matcher.Method == "" || strings.EqualFold(matcher.Method, req.Method), nil
 }
 
+func matchHeader(req *http.Request, matcher Matcher) (bool, error) {
+	return matcher.Header == nil || reflect.DeepEqual(matcher.Header, req.Header), nil
+}
+
 var matchFuncs = [...]matchFunc{ //nolint:gochecknoglobals
 	matchPath, matchMethod, isMatchBodyString, isMatchBodyJSON, isMatchBodyJSONString,
-	isMatchPartOfHeader,
+	isMatchPartOfHeader, matchHeader,
 }
 
 // isMatch returns whether the request matches with the matcher.
@@ -37,11 +41,6 @@ func isMatch(req *http.Request, matcher Matcher) (bool, error) {
 	for _, match := range matchFuncs {
 		if f, err := match(req, matcher); err != nil || !f {
 			return f, err
-		}
-	}
-	if matcher.Header != nil {
-		if !reflect.DeepEqual(matcher.Header, req.Header) {
-			return false, nil
 		}
 	}
 	if matcher.PartOfQuery != nil {
