@@ -228,3 +228,68 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 		})
 	}
 }
+
+func BenchmarkTransport_RoundTrip(b *testing.B) { //nolint:funlen
+	token := "XXXXX"
+	transport := &flute.Transport{
+		Services: []flute.Service{
+			{
+				Endpoint: "http://example.org",
+			},
+			{
+				Endpoint: "http://example.com",
+				Routes: []flute.Route{
+					{
+						Matcher: &flute.Matcher{
+							Method: "GET",
+						},
+					},
+					{
+						Name: "create a user",
+						Matcher: &flute.Matcher{
+							Method: "POST",
+							Path:   "/users",
+						},
+						Tester: &flute.Tester{
+							BodyJSONString: `{
+										  "name": "foo",
+										  "email": "foo@example.com"
+										}`,
+							Header: http.Header{
+								"Authorization": []string{"token " + token},
+							},
+						},
+						Response: &flute.Response{
+							Base: http.Response{
+								StatusCode: 201,
+							},
+							BodyString: `{
+										  "id": 10,
+										  "name": "foo",
+										  "email": "foo@example.com"
+										}`,
+						},
+					},
+				},
+			},
+		},
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		resp, _ := transport.RoundTrip(&http.Request{
+			URL: &url.URL{
+				Scheme: "http",
+				Host:   "example.com",
+				Path:   "/users",
+			},
+			Method: "POST",
+			Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+			Header: http.Header{
+				"Authorization": []string{"token " + token},
+			},
+		})
+		_, _ = io.Copy(ioutil.Discard, resp.Body)
+		resp.Body.Close()
+	}
+}
