@@ -441,12 +441,13 @@ func Benchmark_isMatchPartOfQuery(b *testing.B) {
 	}
 }
 
-func Test_isMatchPartOfHeader(t *testing.T) {
+func Test_isMatchPartOfHeader(t *testing.T) { //nolint:funlen
 	data := []struct {
 		title   string
 		req     *http.Request
 		matcher Matcher
 		exp     bool
+		isErr   bool
 	}{
 		{
 			title: "header value doesn't match",
@@ -491,7 +492,12 @@ func Test_isMatchPartOfHeader(t *testing.T) {
 	for _, d := range data {
 		d := d
 		t.Run(d.title, func(t *testing.T) {
-			b := isMatchPartOfHeader(d.req, d.matcher)
+			b, err := isMatchPartOfHeader(d.req, d.matcher)
+			if d.isErr {
+				require.NotNil(t, err)
+				return
+			}
+			require.Nil(t, err)
 			if d.exp {
 				require.True(t, b)
 				return
@@ -552,7 +558,7 @@ func Benchmark_isMatchPartOfHeader(b *testing.B) {
 		d := d
 		b.Run(d.title, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				isMatchPartOfHeader(d.req, d.matcher)
+				_, _ = isMatchPartOfHeader(d.req, d.matcher)
 			}
 		})
 	}
