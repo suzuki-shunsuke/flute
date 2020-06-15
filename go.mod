@@ -1,4 +1,4 @@
-module github.com/suzuki-shunsuke/flute
+module github.com/suzuki-shunsuke/flute/v2
 
 go 1.14
 
