@@ -14,8 +14,8 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 	data := []struct {
 		title   string
 		req     *http.Request
-		service *Service
-		route   *Route
+		service Service
+		route   Route
 	}{
 		{
 			title: "if the tester is nil, do nothing",
@@ -30,7 +30,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 				  "email": "foo@example.com"
 				}`)),
 			},
-			route: &Route{},
+			route: Route{},
 		},
 		{
 			title: "body json string",
@@ -49,9 +49,9 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 					"Content-Type":  []string{"application/json"},
 				},
 			},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{
+			service: Service{},
+			route: Route{
+				Tester: Tester{
 					Method: "POST",
 					Path:   "/users",
 					BodyJSONString: `{
@@ -72,7 +72,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 						"name": []string{"foo"},
 						"age":  []string{"10"},
 					},
-					Test: func(t *testing.T, req *http.Request, service *Service, route *Route) {},
+					Test: func(t *testing.T, req *http.Request, service Service, route Route) {},
 				},
 			},
 		},
@@ -81,9 +81,9 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`foo`)),
 			},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{
+			service: Service{},
+			route: Route{
+				Tester: Tester{
 					BodyString: `foo`,
 				},
 			},
@@ -93,9 +93,9 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`[{"name": "foo"}]`)),
 			},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{
+			service: Service{},
+			route: Route{
+				Tester: Tester{
 					BodyJSON: []map[string]interface{}{
 						{
 							"name": "foo",
@@ -145,17 +145,17 @@ func Test_testBodyString(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		service *Service
-		route   *Route
+		service Service
+		route   Route
 	}{
 		{
 			title: "normal",
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`"foo"`)),
 			},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{
+			service: Service{},
+			route: Route{
+				Tester: Tester{
 					BodyString: `"foo"`,
 				},
 			},
@@ -163,9 +163,9 @@ func Test_testBodyString(t *testing.T) {
 		{
 			title:   "request body is nil",
 			req:     &http.Request{},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{
+			service: Service{},
+			route: Route{
+				Tester: Tester{
 					BodyString: "",
 				},
 			},
@@ -184,8 +184,8 @@ func Test_testPath(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		service *Service
-		route   *Route
+		service Service
+		route   Route
 	}{
 		{
 			title: "normal",
@@ -194,9 +194,9 @@ func Test_testPath(t *testing.T) {
 					Path: "/foo",
 				},
 			},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{
+			service: Service{},
+			route: Route{
+				Tester: Tester{
 					Path: "/foo",
 				},
 			},
@@ -215,17 +215,17 @@ func Test_testMethod(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		service *Service
-		route   *Route
+		service Service
+		route   Route
 	}{
 		{
 			title: "normal",
 			req: &http.Request{
 				Method: "PUT",
 			},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{
+			service: Service{},
+			route: Route{
+				Tester: Tester{
 					Method: "put",
 				},
 			},
@@ -244,17 +244,17 @@ func Test_testBodyJSON(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		service *Service
-		route   *Route
+		service Service
+		route   Route
 	}{
 		{
 			title: "normal",
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`[{"foo":"bar"}]`)),
 			},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{
+			service: Service{},
+			route: Route{
+				Tester: Tester{
 					BodyJSON: []map[string]string{
 						{
 							"foo": "bar",
@@ -266,9 +266,9 @@ func Test_testBodyJSON(t *testing.T) {
 		{
 			title:   "the request body is nil",
 			req:     &http.Request{},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{},
+			service: Service{},
+			route: Route{
+				Tester: Tester{},
 			},
 		},
 	}
@@ -285,17 +285,17 @@ func Test_testBodyJSONString(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		service *Service
-		route   *Route
+		service Service
+		route   Route
 	}{
 		{
 			title: "normal",
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`[{"foo":"bar"}]`)),
 			},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{
+			service: Service{},
+			route: Route{
+				Tester: Tester{
 					BodyJSONString: `[
 					{"foo":"bar"}
 					]`,
@@ -305,9 +305,9 @@ func Test_testBodyJSONString(t *testing.T) {
 		{
 			title:   "the request body is nil",
 			req:     &http.Request{},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{},
+			service: Service{},
+			route: Route{
+				Tester: Tester{},
 			},
 		},
 	}
@@ -324,8 +324,8 @@ func Test_testPartOfHeader(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		service *Service
-		route   *Route
+		service Service
+		route   Route
 	}{
 		{
 			title: "normal",
@@ -335,9 +335,9 @@ func Test_testPartOfHeader(t *testing.T) {
 					"BAR": []string{"bar"},
 				},
 			},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{
+			service: Service{},
+			route: Route{
+				Tester: Tester{
 					Header: http.Header{
 						"FOO": []string{"foo"},
 						"BAR": nil,
@@ -359,8 +359,8 @@ func Test_testPartOfQuery(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		service *Service
-		route   *Route
+		service Service
+		route   Route
 	}{
 		{
 			title: "normal",
@@ -369,9 +369,9 @@ func Test_testPartOfQuery(t *testing.T) {
 					RawQuery: "name=foo",
 				},
 			},
-			service: &Service{},
-			route: &Route{
-				Tester: &Tester{
+			service: Service{},
+			route: Route{
+				Tester: Tester{
 					Query: url.Values{
 						"name": []string{"foo"},
 					},

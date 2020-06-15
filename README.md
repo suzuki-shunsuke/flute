@@ -27,7 +27,7 @@ The goal is
 * Test request parameters such as the request path, headers and body
 * Mock the HTTP server
 
-`*flute.Transport` implements [http.RoundTripper](https://golang.org/pkg/net/http/#RoundTripper).
+`flute.Transport` implements [http.RoundTripper](https://golang.org/pkg/net/http/#RoundTripper).
 
 `flute` uses [testify](https://github.com/stretchr/testify)'s assert internally.
 You can test the http request parameters with assert.

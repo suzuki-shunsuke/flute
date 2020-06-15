@@ -1,4 +1,4 @@
-package examples
+package examples //nolint:testpackage
 
 import (
 	"net/http"
@@ -13,7 +13,7 @@ func TestClient_CreateUser(t *testing.T) {
 	client := &Client{
 		Token: token,
 		HTTPClient: &http.Client{
-			Transport: &flute.Transport{
+			Transport: flute.Transport{
 				T: t,
 				Services: []flute.Service{
 					{
@@ -21,11 +21,11 @@ func TestClient_CreateUser(t *testing.T) {
 						Routes: []flute.Route{
 							{
 								Name: "create a user",
-								Matcher: &flute.Matcher{
+								Matcher: flute.Matcher{
 									Method: "POST",
 									Path:   "/users",
 								},
-								Tester: &flute.Tester{
+								Tester: flute.Tester{
 									BodyJSONString: `{
 										  "name": "foo",
 										  "email": "foo@example.com"
@@ -34,7 +34,7 @@ func TestClient_CreateUser(t *testing.T) {
 										"Authorization": []string{"token " + token},
 									},
 								},
-								Response: &flute.Response{
+								Response: flute.Response{
 									Base: http.Response{
 										StatusCode: 201,
 									},
@@ -51,7 +51,7 @@ func TestClient_CreateUser(t *testing.T) {
 			},
 		},
 	}
-	user, _, err := client.CreateUser(&User{
+	user, _, err := client.CreateUser(&User{ //nolint:bodyclose
 		Name:  "foo",
 		Email: "foo@example.com",
 	})

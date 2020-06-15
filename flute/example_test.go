@@ -12,7 +12,7 @@ import (
 
 func Example_simpleMock() {
 	http.DefaultClient = &http.Client{
-		Transport: &flute.Transport{
+		Transport: flute.Transport{
 			// if *testing.T isn't given, the transport is a just mock and doesn't run the test.
 			// T: t,
 			Services: []flute.Service{
@@ -21,14 +21,14 @@ func Example_simpleMock() {
 					Routes: []flute.Route{
 						{
 							Name: "get a user",
-							Matcher: &flute.Matcher{
+							Matcher: flute.Matcher{
 								Method: "GET",
 								Path:   "/users",
 								Query: url.Values{
 									"id": []string{"10"},
 								},
 							},
-							Response: &flute.Response{
+							Response: flute.Response{
 								Base: http.Response{
 									StatusCode: 201,
 								},

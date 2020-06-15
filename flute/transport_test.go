@@ -19,7 +19,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 	data := []struct {
 		title     string
 		req       *http.Request
-		transport *flute.Transport
+		transport flute.Transport
 		isErr     bool
 		exp       *http.Response
 	}{
@@ -37,7 +37,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 					"Authorization": []string{"token " + token},
 				},
 			},
-			transport: &flute.Transport{
+			transport: flute.Transport{
 				T: t,
 				Services: []flute.Service{
 					{
@@ -47,17 +47,17 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 						Endpoint: "http://example.com",
 						Routes: []flute.Route{
 							{
-								Matcher: &flute.Matcher{
+								Matcher: flute.Matcher{
 									Method: "GET",
 								},
 							},
 							{
 								Name: "create a user",
-								Matcher: &flute.Matcher{
+								Matcher: flute.Matcher{
 									Method: "POST",
 									Path:   "/users",
 								},
-								Tester: &flute.Tester{
+								Tester: flute.Tester{
 									BodyJSONString: `{
 										  "name": "foo",
 										  "email": "foo@example.com"
@@ -66,7 +66,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 										"Authorization": []string{"token " + token},
 									},
 								},
-								Response: &flute.Response{
+								Response: flute.Response{
 									Base: http.Response{
 										StatusCode: 201,
 									},
@@ -99,13 +99,13 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 					"Authorization": []string{"token " + token},
 				},
 			},
-			transport: &flute.Transport{
+			transport: flute.Transport{
 				Services: []flute.Service{
 					{
 						Endpoint: "http://example.com",
 						Routes: []flute.Route{
 							{
-								Matcher: &flute.Matcher{
+								Matcher: flute.Matcher{
 									Match: func(req *http.Request) (bool, error) {
 										return false, errors.New("failed to match")
 									},
@@ -137,14 +137,14 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 					"Authorization": []string{"token " + token},
 				},
 			},
-			transport: &flute.Transport{
+			transport: flute.Transport{
 				T: t,
 				Services: []flute.Service{
 					{
 						Endpoint: "http://example.com",
 						Routes: []flute.Route{
 							{
-								Matcher: &flute.Matcher{
+								Matcher: flute.Matcher{
 									Match: func(req *http.Request) (bool, error) {
 										return false, errors.New("failed to match")
 									},
@@ -176,13 +176,13 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 					"Authorization": []string{"token " + token},
 				},
 			},
-			transport: &flute.Transport{
+			transport: flute.Transport{
 				Services: []flute.Service{
 					{
 						Endpoint: "http://example.com",
 						Routes: []flute.Route{
 							{
-								Matcher: &flute.Matcher{
+								Matcher: flute.Matcher{
 									Match: func(req *http.Request) (bool, error) {
 										return false, errors.New("failed to match")
 									},
@@ -199,7 +199,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 		{
 			title: "transport.Transport is called",
 			req:   &http.Request{},
-			transport: &flute.Transport{
+			transport: flute.Transport{
 				Transport: flute.NewMockRoundTripper(t, gomic.DoNothing).
 					SetReturnRoundTrip(&http.Response{
 						StatusCode: 401,
@@ -231,7 +231,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 
 func BenchmarkTransport_RoundTrip(b *testing.B) { //nolint:funlen
 	token := "XXXXX"
-	transport := &flute.Transport{
+	transport := flute.Transport{
 		Services: []flute.Service{
 			{
 				Endpoint: "http://example.org",
@@ -240,17 +240,17 @@ func BenchmarkTransport_RoundTrip(b *testing.B) { //nolint:funlen
 				Endpoint: "http://example.com",
 				Routes: []flute.Route{
 					{
-						Matcher: &flute.Matcher{
+						Matcher: flute.Matcher{
 							Method: "GET",
 						},
 					},
 					{
 						Name: "create a user",
-						Matcher: &flute.Matcher{
+						Matcher: flute.Matcher{
 							Method: "POST",
 							Path:   "/users",
 						},
-						Tester: &flute.Tester{
+						Tester: flute.Tester{
 							BodyJSONString: `{
 										  "name": "foo",
 										  "email": "foo@example.com"
@@ -259,7 +259,7 @@ func BenchmarkTransport_RoundTrip(b *testing.B) { //nolint:funlen
 								"Authorization": []string{"token " + token},
 							},
 						},
-						Response: &flute.Response{
+						Response: flute.Response{
 							Base: http.Response{
 								StatusCode: 201,
 							},
