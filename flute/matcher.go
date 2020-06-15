@@ -22,8 +22,12 @@ func matchPath(req *http.Request, matcher Matcher) (bool, error) {
 	return matcher.Path == "" || matcher.Path == req.URL.Path, nil
 }
 
+func matchMethod(req *http.Request, matcher Matcher) (bool, error) {
+	return matcher.Method == "" || strings.EqualFold(matcher.Method, req.Method), nil
+}
+
 var matchFuncs = [...]matchFunc{ //nolint:gochecknoglobals
-	matchPath,
+	matchPath, matchMethod,
 }
 
 // isMatch returns whether the request matches with the matcher.
@@ -32,11 +36,6 @@ func isMatch(req *http.Request, matcher Matcher) (bool, error) { //nolint:gocogn
 	for _, match := range matchFuncs {
 		if f, err := match(req, matcher); err != nil || !f {
 			return f, err
-		}
-	}
-	if matcher.Method != "" {
-		if !strings.EqualFold(matcher.Method, req.Method) {
-			return false, nil
 		}
 	}
 	if matcher.BodyString != "" {
