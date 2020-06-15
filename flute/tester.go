@@ -14,7 +14,7 @@ import (
 type testFunc func(t *testing.T, req *http.Request, service Service, route Route)
 
 var testFuncs = [...]testFunc{ //nolint:gochecknoglobals
-	testPath, testMethod,
+	testPath, testMethod, testBodyString,
 }
 
 func testRequest(t *testing.T, req *http.Request, service Service, route Route) {
@@ -22,9 +22,6 @@ func testRequest(t *testing.T, req *http.Request, service Service, route Route) 
 		fn(t, req, service, route)
 	}
 	tester := route.Tester
-	if tester.BodyString != "" {
-		testBodyString(t, req, service, route)
-	}
 	if tester.BodyJSON != nil {
 		testBodyJSON(t, req, service, route)
 	}
@@ -59,14 +56,14 @@ request name: %s`, msg, srv, reqName)
 }
 
 func testBodyString(t *testing.T, req *http.Request, service Service, route Route) {
-	reqName := route.Name
-	srv := service.Endpoint
-	tester := route.Tester
+	if route.Tester.BodyString == "" {
+		return
+	}
 
 	if req.Body == nil {
 		assert.Equal(
-			t, tester.BodyString, "",
-			makeMsg("request body should match", srv, reqName))
+			t, route.Tester.BodyString, "",
+			makeMsg("request body should match", service.Endpoint, route.Name))
 		return
 	}
 	b, err := ioutil.ReadAll(req.Body)
@@ -74,12 +71,12 @@ func testBodyString(t *testing.T, req *http.Request, service Service, route Rout
 		assert.Fail(
 			t, makeMsg(
 				fmt.Sprintf("failed to read the request body: %v", err),
-				srv, reqName))
+				service.Endpoint, route.Name))
 		return
 	}
 	assert.Equalf(
-		t, tester.BodyString, string(b),
-		makeMsg("request body should match", srv, reqName))
+		t, route.Tester.BodyString, string(b),
+		makeMsg("request body should match", service.Endpoint, route.Name))
 }
 
 func testPath(t *testing.T, req *http.Request, service Service, route Route) {
