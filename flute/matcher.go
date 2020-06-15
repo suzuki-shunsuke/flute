@@ -18,20 +18,20 @@ func isMatchService(req *http.Request, service Service) bool {
 
 type matchFunc func(req *http.Request, matcher Matcher) (bool, error)
 
-var matchFuncs = [...]matchFunc{} //nolint:gochecknoglobals
+func matchPath(req *http.Request, matcher Matcher) (bool, error) {
+	return matcher.Path == "" || matcher.Path == req.URL.Path, nil
+}
+
+var matchFuncs = [...]matchFunc{ //nolint:gochecknoglobals
+	matchPath,
+}
 
 // isMatch returns whether the request matches with the matcher.
 // If the matcher has multiple conditions, IsMatch returns true if the request meets all conditions.
 func isMatch(req *http.Request, matcher Matcher) (bool, error) { //nolint:gocognit
 	for _, match := range matchFuncs {
-		f, err := match(req, matcher)
-		if err != nil || !f {
+		if f, err := match(req, matcher); err != nil || !f {
 			return f, err
-		}
-	}
-	if matcher.Path != "" {
-		if matcher.Path != req.URL.Path {
-			return false, nil
 		}
 	}
 	if matcher.Method != "" {
