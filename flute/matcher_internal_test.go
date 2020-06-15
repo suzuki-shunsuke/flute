@@ -70,15 +70,6 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 		exp     bool
 	}{
 		{
-			title: "if mathcer is nil, the request matches the matcher",
-			req: &http.Request{
-				URL: &url.URL{
-					Path: "/foo",
-				},
-			},
-			exp: true,
-		},
-		{
 			title: "path doesn't match",
 			req: &http.Request{
 				URL: &url.URL{
@@ -212,14 +203,6 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 		req     *http.Request
 		matcher Matcher
 	}{
-		{
-			title: "if mathcer is nil, the request matches the matcher",
-			req: &http.Request{
-				URL: &url.URL{
-					Path: "/foo",
-				},
-			},
-		},
 		{
 			title: "path doesn't match",
 			req: &http.Request{
