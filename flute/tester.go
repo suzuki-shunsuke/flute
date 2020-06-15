@@ -16,6 +16,7 @@ type testFunc func(t *testing.T, req *http.Request, service Service, route Route
 var testFuncs = [...]testFunc{ //nolint:gochecknoglobals
 	testPath, testMethod, testBodyString, testBodyJSON,
 	testBodyJSONString, testPartOfHeader, testHeader, testPartOfQuery,
+	testQuery,
 }
 
 func testHeader(t *testing.T, req *http.Request, service Service, route Route) {
@@ -27,16 +28,20 @@ func testHeader(t *testing.T, req *http.Request, service Service, route Route) {
 		makeMsg("request header should match", service.Endpoint, route.Name))
 }
 
+func testQuery(t *testing.T, req *http.Request, service Service, route Route) {
+	if route.Tester.Query == nil {
+		return
+	}
+	assert.Equal(
+		t, route.Tester.Query, req.URL.Query(),
+		makeMsg("request query parameter should match", service.Endpoint, route.Name))
+}
+
 func testRequest(t *testing.T, req *http.Request, service Service, route Route) {
 	for _, fn := range testFuncs {
 		fn(t, req, service, route)
 	}
 	tester := route.Tester
-	if tester.Query != nil {
-		assert.Equal(
-			t, tester.Query, req.URL.Query(),
-			makeMsg("request query parameter should match", service.Endpoint, route.Name))
-	}
 	if tester.Test != nil {
 		tester.Test(t, req, service, route)
 	}
