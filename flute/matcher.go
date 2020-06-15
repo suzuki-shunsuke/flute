@@ -27,7 +27,7 @@ func matchMethod(req *http.Request, matcher Matcher) (bool, error) {
 }
 
 var matchFuncs = [...]matchFunc{ //nolint:gochecknoglobals
-	matchPath, matchMethod,
+	matchPath, matchMethod, isMatchBodyString,
 }
 
 // isMatch returns whether the request matches with the matcher.
@@ -35,12 +35,6 @@ var matchFuncs = [...]matchFunc{ //nolint:gochecknoglobals
 func isMatch(req *http.Request, matcher Matcher) (bool, error) { //nolint:gocognit
 	for _, match := range matchFuncs {
 		if f, err := match(req, matcher); err != nil || !f {
-			return f, err
-		}
-	}
-	if matcher.BodyString != "" {
-		f, err := isMatchBodyString(req, matcher)
-		if err != nil || !f {
 			return f, err
 		}
 	}
@@ -117,6 +111,9 @@ func isMatchPartOfQuery(req *http.Request, matcher Matcher) bool {
 }
 
 func isMatchBodyString(req *http.Request, matcher Matcher) (bool, error) {
+	if matcher.BodyString == "" {
+		return true, nil
+	}
 	if req.Body == nil {
 		return false, nil
 	}
@@ -124,10 +121,7 @@ func isMatchBodyString(req *http.Request, matcher Matcher) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("failed to read the request body: %w", err)
 	}
-	if matcher.BodyString != string(b) {
-		return false, nil
-	}
-	return true, nil
+	return matcher.BodyString == string(b), nil
 }
 
 func isMatchBodyJSONString(req *http.Request, matcher Matcher) (bool, error) {

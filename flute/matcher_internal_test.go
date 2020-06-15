@@ -558,7 +558,7 @@ func Benchmark_isMatchPartOfHeader(b *testing.B) {
 	}
 }
 
-func Test_isMatchBodyString(t *testing.T) { //nolint:dupl
+func Test_isMatchBodyString(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -568,7 +568,10 @@ func Test_isMatchBodyString(t *testing.T) { //nolint:dupl
 	}{
 		{
 			title: "request body is nil",
-			req:   &http.Request{},
+			matcher: Matcher{
+				BodyString: "foo",
+			},
+			req: &http.Request{},
 		},
 		{
 			title: "request body matches",
@@ -649,7 +652,7 @@ func Benchmark_isMatchBodyString(b *testing.B) {
 	}
 }
 
-func Test_isMatchBodyJSONString(t *testing.T) { //nolint:dupl
+func Test_isMatchBodyJSONString(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
