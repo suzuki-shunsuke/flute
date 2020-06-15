@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func createHTTPResponse(req *http.Request, resp *Response) (*http.Response, error) {
+func createHTTPResponse(req *http.Request, resp Response) (*http.Response, error) {
 	if resp.Response != nil {
 		return resp.Response(req)
 	}

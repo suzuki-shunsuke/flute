@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func testRequest(t *testing.T, req *http.Request, service *Service, route *Route) {
+func testRequest(t *testing.T, req *http.Request, service Service, route Route) {
 	tester := route.Tester
 	if tester == nil {
 		// SPEC if the tester is nil, do nothing.
@@ -59,9 +59,7 @@ service: %s
 request name: %s`, msg, srv, reqName)
 }
 
-func testBodyString(
-	t *testing.T, req *http.Request, service *Service, route *Route,
-) {
+func testBodyString(t *testing.T, req *http.Request, service Service, route Route) {
 	reqName := route.Name
 	srv := service.Endpoint
 	tester := route.Tester
@@ -85,7 +83,7 @@ func testBodyString(
 		makeMsg("request body should match", srv, reqName))
 }
 
-func testPath(t *testing.T, req *http.Request, service *Service, route *Route) {
+func testPath(t *testing.T, req *http.Request, service Service, route Route) {
 	reqName := route.Name
 	srv := service.Endpoint
 	tester := route.Tester
@@ -95,7 +93,7 @@ func testPath(t *testing.T, req *http.Request, service *Service, route *Route) {
 		makeMsg("request path should match", srv, reqName))
 }
 
-func testMethod(t *testing.T, req *http.Request, service *Service, route *Route) {
+func testMethod(t *testing.T, req *http.Request, service Service, route Route) {
 	reqName := route.Name
 	srv := service.Endpoint
 	tester := route.Tester
@@ -105,7 +103,7 @@ func testMethod(t *testing.T, req *http.Request, service *Service, route *Route)
 		makeMsg("request method should match", srv, reqName))
 }
 
-func testBodyJSON(t *testing.T, req *http.Request, service *Service, route *Route) {
+func testBodyJSON(t *testing.T, req *http.Request, service Service, route Route) {
 	reqName := route.Name
 	srv := service.Endpoint
 	tester := route.Tester
@@ -137,7 +135,7 @@ func testBodyJSON(t *testing.T, req *http.Request, service *Service, route *Rout
 }
 
 func testBodyJSONString(
-	t *testing.T, req *http.Request, service *Service, route *Route,
+	t *testing.T, req *http.Request, service Service, route Route,
 ) {
 	reqName := route.Name
 	srv := service.Endpoint
@@ -162,7 +160,7 @@ func testBodyJSONString(
 		makeMsg("request body should match", srv, reqName))
 }
 
-func testPartOfHeader(t *testing.T, req *http.Request, service *Service, route *Route) {
+func testPartOfHeader(t *testing.T, req *http.Request, service Service, route Route) {
 	reqName := route.Name
 	srv := service.Endpoint
 
@@ -182,7 +180,7 @@ func testPartOfHeader(t *testing.T, req *http.Request, service *Service, route *
 	}
 }
 
-func testPartOfQuery(t *testing.T, req *http.Request, service *Service, route *Route) {
+func testPartOfQuery(t *testing.T, req *http.Request, service Service, route Route) {
 	reqName := route.Name
 	srv := service.Endpoint
 

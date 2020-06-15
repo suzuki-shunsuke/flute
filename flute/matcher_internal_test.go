@@ -35,7 +35,7 @@ func Test_isMatchService(t *testing.T) {
 					Scheme: d.scheme,
 					Host:   d.host,
 				},
-			}, &Service{
+			}, Service{
 				Endpoint: d.endpoint,
 			})
 			if d.exp {
@@ -55,7 +55,7 @@ func Benchmark_isMatchService(b *testing.B) {
 				Scheme: "http",
 				Host:   "example.com",
 			},
-		}, &Service{
+		}, Service{
 			Endpoint: "http://example.com",
 		})
 	}
@@ -65,7 +65,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 	data := []struct {
 		title   string
 		req     *http.Request
-		matcher *Matcher
+		matcher Matcher
 		isErr   bool
 		exp     bool
 	}{
@@ -85,7 +85,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 					Path: "/foo",
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				Path: "/bar",
 			},
 		},
@@ -94,7 +94,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 			req: &http.Request{
 				Method: "GET",
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				Method: "POST",
 			},
 		},
@@ -103,7 +103,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader("foo")),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyString: "hello",
 			},
 		},
@@ -112,7 +112,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`"foo"`)),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyJSON: 10,
 			},
 		},
@@ -121,7 +121,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`"foo"`)),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyJSONString: `"bar"`,
 			},
 		},
@@ -132,7 +132,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 					"FOO": []string{"foo"},
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfHeader: http.Header{
 					"FOO": []string{"bar"},
 				},
@@ -146,7 +146,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 					"BAR": []string{"bar"},
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				Header: http.Header{
 					"FOO": []string{"foo"},
 				},
@@ -159,7 +159,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 					RawQuery: "name=foo",
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfQuery: url.Values{
 					"name": []string{"bar"},
 				},
@@ -172,7 +172,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 					RawQuery: "name=foo&age=10",
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				Query: url.Values{
 					"name": []string{"foo"},
 				},
@@ -180,7 +180,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 		},
 		{
 			title: "match function doesn't match",
-			matcher: &Matcher{
+			matcher: Matcher{
 				Match: func(req *http.Request) (bool, error) {
 					return false, nil
 				},
@@ -210,7 +210,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 	data := []struct {
 		title   string
 		req     *http.Request
-		matcher *Matcher
+		matcher Matcher
 	}{
 		{
 			title: "if mathcer is nil, the request matches the matcher",
@@ -227,7 +227,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 					Path: "/foo",
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				Path: "/bar",
 			},
 		},
@@ -236,7 +236,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 			req: &http.Request{
 				Method: "GET",
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				Method: "POST",
 			},
 		},
@@ -245,7 +245,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader("foo")),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyString: "hello",
 			},
 		},
@@ -254,7 +254,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`"foo"`)),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyJSON: 10,
 			},
 		},
@@ -263,7 +263,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`"foo"`)),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyJSONString: `"bar"`,
 			},
 		},
@@ -274,7 +274,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 					"FOO": []string{"foo"},
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfHeader: http.Header{
 					"FOO": []string{"bar"},
 				},
@@ -288,7 +288,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 					"BAR": []string{"bar"},
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				Header: http.Header{
 					"FOO": []string{"foo"},
 				},
@@ -301,7 +301,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 					RawQuery: "name=foo",
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfQuery: url.Values{
 					"name": []string{"bar"},
 				},
@@ -314,7 +314,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 					RawQuery: "name=foo&age=10",
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				Query: url.Values{
 					"name": []string{"foo"},
 				},
@@ -322,7 +322,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 		},
 		{
 			title: "match function doesn't match",
-			matcher: &Matcher{
+			matcher: Matcher{
 				Match: func(req *http.Request) (bool, error) {
 					return false, nil
 				},
@@ -345,7 +345,7 @@ func Test_isMatchPartOfQuery(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		matcher *Matcher
+		matcher Matcher
 		exp     bool
 	}{
 		{
@@ -355,7 +355,7 @@ func Test_isMatchPartOfQuery(t *testing.T) {
 					RawQuery: "name=foo",
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfQuery: url.Values{
 					"name": []string{"bar"},
 				},
@@ -366,7 +366,7 @@ func Test_isMatchPartOfQuery(t *testing.T) {
 			req: &http.Request{
 				URL: &url.URL{},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfQuery: url.Values{
 					"name": nil,
 				},
@@ -379,7 +379,7 @@ func Test_isMatchPartOfQuery(t *testing.T) {
 					RawQuery: "name=foo",
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfQuery: url.Values{
 					"name": []string{"foo"},
 				},
@@ -405,7 +405,7 @@ func Benchmark_isMatchPartOfQuery(b *testing.B) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		matcher *Matcher
+		matcher Matcher
 		exp     bool
 	}{
 		{
@@ -415,7 +415,7 @@ func Benchmark_isMatchPartOfQuery(b *testing.B) {
 					RawQuery: "name=foo",
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfQuery: url.Values{
 					"name": []string{"bar"},
 				},
@@ -426,7 +426,7 @@ func Benchmark_isMatchPartOfQuery(b *testing.B) {
 			req: &http.Request{
 				URL: &url.URL{},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfQuery: url.Values{
 					"name": nil,
 				},
@@ -439,7 +439,7 @@ func Benchmark_isMatchPartOfQuery(b *testing.B) {
 					RawQuery: "name=foo",
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfQuery: url.Values{
 					"name": []string{"foo"},
 				},
@@ -462,7 +462,7 @@ func Test_isMatchPartOfHeader(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		matcher *Matcher
+		matcher Matcher
 		exp     bool
 	}{
 		{
@@ -472,7 +472,7 @@ func Test_isMatchPartOfHeader(t *testing.T) {
 					"FOO": []string{"foo"},
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfHeader: http.Header{
 					"FOO": []string{"bar"},
 				},
@@ -483,7 +483,7 @@ func Test_isMatchPartOfHeader(t *testing.T) {
 			req: &http.Request{
 				Header: http.Header{},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfHeader: http.Header{
 					"FOO": nil,
 				},
@@ -496,7 +496,7 @@ func Test_isMatchPartOfHeader(t *testing.T) {
 					"FOO": []string{"foo"},
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfHeader: http.Header{
 					"FOO": []string{"foo"},
 				},
@@ -522,7 +522,7 @@ func Benchmark_isMatchPartOfHeader(b *testing.B) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		matcher *Matcher
+		matcher Matcher
 		exp     bool
 	}{
 		{
@@ -532,7 +532,7 @@ func Benchmark_isMatchPartOfHeader(b *testing.B) {
 					"FOO": []string{"foo"},
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfHeader: http.Header{
 					"FOO": []string{"bar"},
 				},
@@ -543,7 +543,7 @@ func Benchmark_isMatchPartOfHeader(b *testing.B) {
 			req: &http.Request{
 				Header: http.Header{},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfHeader: http.Header{
 					"FOO": nil,
 				},
@@ -556,7 +556,7 @@ func Benchmark_isMatchPartOfHeader(b *testing.B) {
 					"FOO": []string{"foo"},
 				},
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				PartOfHeader: http.Header{
 					"FOO": []string{"foo"},
 				},
@@ -579,7 +579,7 @@ func Test_isMatchBodyString(t *testing.T) { //nolint:dupl
 	data := []struct {
 		title   string
 		req     *http.Request
-		matcher *Matcher
+		matcher Matcher
 		isErr   bool
 		exp     bool
 	}{
@@ -592,7 +592,7 @@ func Test_isMatchBodyString(t *testing.T) { //nolint:dupl
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader("foo")),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyString: "foo",
 			},
 			exp: true,
@@ -602,7 +602,7 @@ func Test_isMatchBodyString(t *testing.T) { //nolint:dupl
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader("foo")),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyString: "bar",
 			},
 		},
@@ -630,7 +630,7 @@ func Benchmark_isMatchBodyString(b *testing.B) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		matcher *Matcher
+		matcher Matcher
 	}{
 		{
 			title: "request body is nil",
@@ -641,7 +641,7 @@ func Benchmark_isMatchBodyString(b *testing.B) {
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader("foo")),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyString: "foo",
 			},
 		},
@@ -650,7 +650,7 @@ func Benchmark_isMatchBodyString(b *testing.B) {
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader("foo")),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyString: "bar",
 			},
 		},
@@ -670,7 +670,7 @@ func Test_isMatchBodyJSONString(t *testing.T) { //nolint:dupl
 	data := []struct {
 		title   string
 		req     *http.Request
-		matcher *Matcher
+		matcher Matcher
 		isErr   bool
 		exp     bool
 	}{
@@ -683,7 +683,7 @@ func Test_isMatchBodyJSONString(t *testing.T) { //nolint:dupl
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyJSONString: `{"name": "foo", "id": 10}`,
 			},
 			exp: true,
@@ -693,7 +693,7 @@ func Test_isMatchBodyJSONString(t *testing.T) { //nolint:dupl
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyJSONString: `{"name": "foo", "id": 9}`,
 			},
 		},
@@ -721,7 +721,7 @@ func Benchmark_isMatchBodyJSONString(b *testing.B) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		matcher *Matcher
+		matcher Matcher
 	}{
 		{
 			title: "request body is nil",
@@ -732,7 +732,7 @@ func Benchmark_isMatchBodyJSONString(b *testing.B) {
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyJSONString: `{"name": "foo", "id": 10}`,
 			},
 		},
@@ -741,7 +741,7 @@ func Benchmark_isMatchBodyJSONString(b *testing.B) {
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyJSONString: `{"name": "foo", "id": 9}`,
 			},
 		},
@@ -761,7 +761,7 @@ func Test_isMatchBodyJSON(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		matcher *Matcher
+		matcher Matcher
 		isErr   bool
 		exp     bool
 	}{
@@ -774,7 +774,7 @@ func Test_isMatchBodyJSON(t *testing.T) {
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`{"name": "foo"}`)),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyJSON: map[string]interface{}{"name": "foo"},
 			},
 			exp: true,
@@ -784,7 +784,7 @@ func Test_isMatchBodyJSON(t *testing.T) {
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyJSON: map[string]interface{}{"name": "foo"},
 			},
 		},
@@ -812,7 +812,7 @@ func Benchmark_isMatchBodyJSON(b *testing.B) {
 	data := []struct {
 		title   string
 		req     *http.Request
-		matcher *Matcher
+		matcher Matcher
 	}{
 		{
 			title: "request body is nil",
@@ -823,7 +823,7 @@ func Benchmark_isMatchBodyJSON(b *testing.B) {
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`{"name": "foo"}`)),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyJSON: map[string]interface{}{"name": "foo"},
 			},
 		},
@@ -832,7 +832,7 @@ func Benchmark_isMatchBodyJSON(b *testing.B) {
 			req: &http.Request{
 				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
-			matcher: &Matcher{
+			matcher: Matcher{
 				BodyJSON: map[string]interface{}{"name": "foo"},
 			},
 		},

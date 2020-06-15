@@ -26,10 +26,10 @@ body:
 
 // RoundTrip implements http.RoundTripper.
 // RoundTrip traverses the matched route and run the test and returns response.
-func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
+func (transport Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	for _, service := range transport.Services {
 		service := service
-		if !isMatchService(req, &service) {
+		if !isMatchService(req, service) {
 			continue
 		}
 		for _, route := range service.Routes {
@@ -47,7 +47,7 @@ func (transport *Transport) RoundTrip(req *http.Request) (*http.Response, error)
 			}
 			// test
 			if transport.T != nil {
-				testRequest(transport.T, req, &service, &route)
+				testRequest(transport.T, req, service, route)
 			}
 			// return response
 			return createHTTPResponse(req, route.Response)

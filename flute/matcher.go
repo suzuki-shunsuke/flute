@@ -12,17 +12,13 @@ import (
 
 // isMatchService returns whether the request matches with the service.
 // isMatchService checks the request URL.Scheme and URL.Host are equal to the service endpoint.
-func isMatchService(req *http.Request, service *Service) bool {
+func isMatchService(req *http.Request, service Service) bool {
 	return req.URL.Scheme+"://"+req.URL.Host == service.Endpoint
 }
 
 // isMatch returns whether the request matches with the matcher.
 // If the matcher has multiple conditions, IsMatch returns true if the request meets all conditions.
-func isMatch(req *http.Request, matcher *Matcher) (bool, error) { //nolint:gocognit
-	if matcher == nil {
-		// SPEC if the matcher is nil, the route matches the request.
-		return true, nil
-	}
+func isMatch(req *http.Request, matcher Matcher) (bool, error) { //nolint:gocognit
 	if matcher.Path != "" {
 		if matcher.Path != req.URL.Path {
 			return false, nil
@@ -80,7 +76,7 @@ func isMatch(req *http.Request, matcher *Matcher) (bool, error) { //nolint:gocog
 	return true, nil
 }
 
-func isMatchPartOfHeader(req *http.Request, matcher *Matcher) bool {
+func isMatchPartOfHeader(req *http.Request, matcher Matcher) bool {
 	for k, v := range matcher.PartOfHeader {
 		a, ok := req.Header[k]
 		if !ok {
@@ -95,7 +91,7 @@ func isMatchPartOfHeader(req *http.Request, matcher *Matcher) bool {
 	return true
 }
 
-func isMatchPartOfQuery(req *http.Request, matcher *Matcher) bool {
+func isMatchPartOfQuery(req *http.Request, matcher Matcher) bool {
 	query := req.URL.Query()
 	for k, v := range matcher.PartOfQuery {
 		a, ok := query[k]
@@ -111,7 +107,7 @@ func isMatchPartOfQuery(req *http.Request, matcher *Matcher) bool {
 	return true
 }
 
-func isMatchBodyString(req *http.Request, matcher *Matcher) (bool, error) {
+func isMatchBodyString(req *http.Request, matcher Matcher) (bool, error) {
 	if req.Body == nil {
 		return false, nil
 	}
@@ -125,7 +121,7 @@ func isMatchBodyString(req *http.Request, matcher *Matcher) (bool, error) {
 	return true, nil
 }
 
-func isMatchBodyJSONString(req *http.Request, matcher *Matcher) (bool, error) {
+func isMatchBodyJSONString(req *http.Request, matcher Matcher) (bool, error) {
 	if req.Body == nil {
 		return false, nil
 	}
@@ -136,7 +132,7 @@ func isMatchBodyJSONString(req *http.Request, matcher *Matcher) (bool, error) {
 	return jsoneq.Equal(b, []byte(matcher.BodyJSONString))
 }
 
-func isMatchBodyJSON(req *http.Request, matcher *Matcher) (bool, error) {
+func isMatchBodyJSON(req *http.Request, matcher Matcher) (bool, error) {
 	if req.Body == nil {
 		return false, nil
 	}

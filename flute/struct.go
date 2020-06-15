@@ -30,12 +30,11 @@ type (
 	// Route is the pair of the macher, tester, and response.
 	Route struct {
 		// Name is embedded the assertion and useful to specify where the test fails.
-		Name string
-		// SPEC if the matcher is nil, the route matches the request.
-		Matcher *Matcher
+		Name    string
+		Matcher Matcher
 		// SPEC if the tester is nil, no test is run
 		Tester   *Tester
-		Response *Response
+		Response Response
 	}
 
 	// Matcher has conditions the request matches with the route.
@@ -66,7 +65,7 @@ type (
 
 	// Tester has the request's tests.
 	Tester struct {
-		Test func(*testing.T, *http.Request, *Service, *Route)
+		Test func(*testing.T, *http.Request, Service, Route)
 		// Path is the request path.
 		Path string
 		// Path is the request method such as "GET".

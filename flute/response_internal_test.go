@@ -23,7 +23,7 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 	data := []struct {
 		title string
 		req   *http.Request
-		resp  *Response
+		resp  Response
 		isErr bool
 		exp   *http.Response
 		body  string
@@ -31,7 +31,7 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 		{
 			title: "body json isn't nil",
 			req:   &http.Request{},
-			resp: &Response{
+			resp: Response{
 				Base: http.Response{
 					Header: http.Header{
 						"FOO": []string{"foo"},
@@ -49,7 +49,7 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 		{
 			title: "failed to marshal json",
 			req:   &http.Request{},
-			resp: &Response{
+			resp: Response{
 				BodyJSON: &invalidMarshaler{},
 			},
 			isErr: true,
@@ -57,7 +57,7 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 		{
 			title: "body string isn't nil",
 			req:   &http.Request{},
-			resp: &Response{
+			resp: Response{
 				BodyString: `{"foo":"bar"}`,
 			},
 			exp: &http.Response{
@@ -68,7 +68,7 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 		{
 			title: "nil request body",
 			req:   &http.Request{},
-			resp:  &Response{},
+			resp:  Response{},
 			exp: &http.Response{
 				Body: ioutil.NopCloser(strings.NewReader("")),
 			},
@@ -76,7 +76,7 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 		{
 			title: "resp.Response",
 			req:   &http.Request{},
-			resp: &Response{
+			resp: Response{
 				Response: func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						Body:       ioutil.NopCloser(strings.NewReader("foo")),
@@ -126,14 +126,14 @@ func Benchmark_createHTTPResponse(b *testing.B) { //nolint:funlen
 	data := []struct {
 		title string
 		req   *http.Request
-		resp  *Response
+		resp  Response
 		isErr bool
 		body  string
 	}{
 		{
 			title: "body json isn't nil",
 			req:   &http.Request{},
-			resp: &Response{
+			resp: Response{
 				Base: http.Response{
 					Header: http.Header{
 						"FOO": []string{"foo"},
@@ -148,7 +148,7 @@ func Benchmark_createHTTPResponse(b *testing.B) { //nolint:funlen
 		{
 			title: "failed to marshal json",
 			req:   &http.Request{},
-			resp: &Response{
+			resp: Response{
 				BodyJSON: &invalidMarshaler{},
 			},
 			isErr: true,
@@ -156,7 +156,7 @@ func Benchmark_createHTTPResponse(b *testing.B) { //nolint:funlen
 		{
 			title: "body string isn't nil",
 			req:   &http.Request{},
-			resp: &Response{
+			resp: Response{
 				BodyString: `{"foo":"bar"}`,
 			},
 			body: `{"foo":"bar"}`,
@@ -164,12 +164,12 @@ func Benchmark_createHTTPResponse(b *testing.B) { //nolint:funlen
 		{
 			title: "nil request body",
 			req:   &http.Request{},
-			resp:  &Response{},
+			resp:  Response{},
 		},
 		{
 			title: "resp.Response",
 			req:   &http.Request{},
-			resp: &Response{
+			resp: Response{
 				Response: func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						Body:       ioutil.NopCloser(strings.NewReader("foo")),
