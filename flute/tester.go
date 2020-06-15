@@ -15,7 +15,7 @@ type testFunc func(t *testing.T, req *http.Request, service Service, route Route
 
 var testFuncs = [...]testFunc{ //nolint:gochecknoglobals
 	testPath, testMethod, testBodyString, testBodyJSON,
-	testBodyJSONString, testPartOfHeader, testHeader,
+	testBodyJSONString, testPartOfHeader, testHeader, testPartOfQuery,
 }
 
 func testHeader(t *testing.T, req *http.Request, service Service, route Route) {
@@ -32,9 +32,6 @@ func testRequest(t *testing.T, req *http.Request, service Service, route Route) 
 		fn(t, req, service, route)
 	}
 	tester := route.Tester
-	if tester.PartOfQuery != nil {
-		testPartOfQuery(t, req, service, route)
-	}
 	if tester.Query != nil {
 		assert.Equal(
 			t, tester.Query, req.URL.Query(),
@@ -171,8 +168,9 @@ func testPartOfHeader(t *testing.T, req *http.Request, service Service, route Ro
 }
 
 func testPartOfQuery(t *testing.T, req *http.Request, service Service, route Route) {
-	reqName := route.Name
-	srv := service.Endpoint
+	if route.Tester.PartOfQuery == nil {
+		return
+	}
 
 	query := req.URL.Query()
 	for k, v := range route.Tester.PartOfQuery {
@@ -180,13 +178,13 @@ func testPartOfQuery(t *testing.T, req *http.Request, service Service, route Rou
 		if !ok {
 			assert.Fail(
 				t, makeMsg(
-					"the following request query is required: "+k, srv, reqName))
+					"the following request query is required: "+k, service.Endpoint, route.Name))
 			return
 		}
 		if v != nil {
 			assert.Equal(
 				t, v, a,
-				makeMsg(fmt.Sprintf(`the request query "%s" should match`, k), srv, reqName))
+				makeMsg(fmt.Sprintf(`the request query "%s" should match`, k), service.Endpoint, route.Name))
 		}
 	}
 }
