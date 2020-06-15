@@ -15,7 +15,16 @@ type testFunc func(t *testing.T, req *http.Request, service Service, route Route
 
 var testFuncs = [...]testFunc{ //nolint:gochecknoglobals
 	testPath, testMethod, testBodyString, testBodyJSON,
-	testBodyJSONString,
+	testBodyJSONString, testPartOfHeader, testHeader,
+}
+
+func testHeader(t *testing.T, req *http.Request, service Service, route Route) {
+	if route.Tester.Header == nil {
+		return
+	}
+	assert.Equal(
+		t, route.Tester.Header, req.Header,
+		makeMsg("request header should match", service.Endpoint, route.Name))
 }
 
 func testRequest(t *testing.T, req *http.Request, service Service, route Route) {
@@ -23,14 +32,6 @@ func testRequest(t *testing.T, req *http.Request, service Service, route Route) 
 		fn(t, req, service, route)
 	}
 	tester := route.Tester
-	if tester.PartOfHeader != nil {
-		testPartOfHeader(t, req, service, route)
-	}
-	if tester.Header != nil {
-		assert.Equal(
-			t, tester.Header, req.Header,
-			makeMsg("request header should match", service.Endpoint, route.Name))
-	}
 	if tester.PartOfQuery != nil {
 		testPartOfQuery(t, req, service, route)
 	}
@@ -149,21 +150,22 @@ func testBodyJSONString(t *testing.T, req *http.Request, service Service, route 
 }
 
 func testPartOfHeader(t *testing.T, req *http.Request, service Service, route Route) {
-	reqName := route.Name
-	srv := service.Endpoint
+	if route.Tester.PartOfHeader == nil {
+		return
+	}
 
 	for k, v := range route.Tester.PartOfHeader {
 		a, ok := req.Header[k]
 		if !ok {
 			assert.Fail(
 				t, makeMsg(
-					"the following request header is required: "+k, srv, reqName))
+					"the following request header is required: "+k, service.Endpoint, route.Name))
 			return
 		}
 		if v != nil {
 			assert.Equal(
 				t, v, a,
-				makeMsg(fmt.Sprintf(`the request header "%s" should match`, k), srv, reqName))
+				makeMsg(fmt.Sprintf(`the request header "%s" should match`, k), service.Endpoint, route.Name))
 		}
 	}
 }
