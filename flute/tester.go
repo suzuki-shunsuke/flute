@@ -14,7 +14,7 @@ import (
 type testFunc func(t *testing.T, req *http.Request, service Service, route Route)
 
 var testFuncs = [...]testFunc{ //nolint:gochecknoglobals
-	testPath,
+	testPath, testMethod,
 }
 
 func testRequest(t *testing.T, req *http.Request, service Service, route Route) {
@@ -22,9 +22,6 @@ func testRequest(t *testing.T, req *http.Request, service Service, route Route) 
 		fn(t, req, service, route)
 	}
 	tester := route.Tester
-	if tester.Method != "" {
-		testMethod(t, req, service, route)
-	}
 	if tester.BodyString != "" {
 		testBodyString(t, req, service, route)
 	}
@@ -95,13 +92,13 @@ func testPath(t *testing.T, req *http.Request, service Service, route Route) {
 }
 
 func testMethod(t *testing.T, req *http.Request, service Service, route Route) {
-	reqName := route.Name
-	srv := service.Endpoint
-	tester := route.Tester
+	if route.Tester.Method == "" {
+		return
+	}
 
 	assert.Equal(
-		t, strings.ToUpper(tester.Method), strings.ToUpper(req.Method),
-		makeMsg("request method should match", srv, reqName))
+		t, strings.ToUpper(route.Tester.Method), strings.ToUpper(req.Method),
+		makeMsg("request method should match", service.Endpoint, route.Name))
 }
 
 func testBodyJSON(t *testing.T, req *http.Request, service Service, route Route) {
