@@ -16,9 +16,19 @@ func isMatchService(req *http.Request, service Service) bool {
 	return req.URL.Scheme+"://"+req.URL.Host == service.Endpoint
 }
 
+type matchFunc func(req *http.Request, matcher Matcher) (bool, error)
+
+var matchFuncs = [...]matchFunc{} //nolint:gochecknoglobals
+
 // isMatch returns whether the request matches with the matcher.
 // If the matcher has multiple conditions, IsMatch returns true if the request meets all conditions.
 func isMatch(req *http.Request, matcher Matcher) (bool, error) { //nolint:gocognit
+	for _, match := range matchFuncs {
+		f, err := match(req, matcher)
+		if err != nil || !f {
+			return f, err
+		}
+	}
 	if matcher.Path != "" {
 		if matcher.Path != req.URL.Path {
 			return false, nil
