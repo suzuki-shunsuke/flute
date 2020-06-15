@@ -663,6 +663,9 @@ func Test_isMatchBodyJSONString(t *testing.T) {
 		{
 			title: "request body is nil",
 			req:   &http.Request{},
+			matcher: Matcher{
+				BodyJSONString: `{"name": "foo", "id": 10}`,
+			},
 		},
 		{
 			title: "request body json matches",
