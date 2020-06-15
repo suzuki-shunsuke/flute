@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/suzuki-shunsuke/flute/flute"
+	"github.com/suzuki-shunsuke/flute/v2/flute"
 )
 
 func TestClient_CreateUser(t *testing.T) {
