@@ -35,8 +35,8 @@ func matchQuery(req *http.Request, matcher Matcher) (bool, error) {
 }
 
 var matchFuncs = [...]matchFunc{ //nolint:gochecknoglobals
-	matchPath, matchMethod, isMatchBodyString, isMatchBodyJSON, isMatchBodyJSONString,
-	isMatchPartOfHeader, matchHeader, isMatchPartOfQuery, matchQuery,
+	matchPath, matchMethod, matchBodyString, matchBodyJSON, matchBodyJSONString,
+	matchPartOfHeader, matchHeader, matchPartOfQuery, matchQuery,
 }
 
 // isMatch returns whether the request matches with the matcher.
@@ -56,7 +56,7 @@ func isMatch(req *http.Request, matcher Matcher) (bool, error) {
 	return true, nil
 }
 
-func isMatchPartOfHeader(req *http.Request, matcher Matcher) (bool, error) {
+func matchPartOfHeader(req *http.Request, matcher Matcher) (bool, error) {
 	for k, v := range matcher.PartOfHeader {
 		a, ok := req.Header[k]
 		if !ok {
@@ -71,7 +71,7 @@ func isMatchPartOfHeader(req *http.Request, matcher Matcher) (bool, error) {
 	return true, nil
 }
 
-func isMatchPartOfQuery(req *http.Request, matcher Matcher) (bool, error) {
+func matchPartOfQuery(req *http.Request, matcher Matcher) (bool, error) {
 	if matcher.PartOfQuery == nil {
 		return true, nil
 	}
@@ -90,7 +90,7 @@ func isMatchPartOfQuery(req *http.Request, matcher Matcher) (bool, error) {
 	return true, nil
 }
 
-func isMatchBodyString(req *http.Request, matcher Matcher) (bool, error) {
+func matchBodyString(req *http.Request, matcher Matcher) (bool, error) {
 	if matcher.BodyString == "" {
 		return true, nil
 	}
@@ -104,7 +104,7 @@ func isMatchBodyString(req *http.Request, matcher Matcher) (bool, error) {
 	return matcher.BodyString == string(b), nil
 }
 
-func isMatchBodyJSONString(req *http.Request, matcher Matcher) (bool, error) {
+func matchBodyJSONString(req *http.Request, matcher Matcher) (bool, error) {
 	if matcher.BodyJSONString == "" {
 		return true, nil
 	}
@@ -118,7 +118,7 @@ func isMatchBodyJSONString(req *http.Request, matcher Matcher) (bool, error) {
 	return jsoneq.Equal(b, []byte(matcher.BodyJSONString))
 }
 
-func isMatchBodyJSON(req *http.Request, matcher Matcher) (bool, error) {
+func matchBodyJSON(req *http.Request, matcher Matcher) (bool, error) {
 	if matcher.BodyJSON == nil {
 		return true, nil
 	}

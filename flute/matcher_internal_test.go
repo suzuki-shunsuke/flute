@@ -324,7 +324,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 	}
 }
 
-func Test_isMatchPartOfQuery(t *testing.T) { //nolint:funlen
+func Test_matchPartOfQuery(t *testing.T) { //nolint:funlen
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -375,7 +375,7 @@ func Test_isMatchPartOfQuery(t *testing.T) { //nolint:funlen
 	for _, d := range data {
 		d := d
 		t.Run(d.title, func(t *testing.T) {
-			b, err := isMatchPartOfQuery(d.req, d.matcher)
+			b, err := matchPartOfQuery(d.req, d.matcher)
 			if d.isErr {
 				require.NotNil(t, err)
 				return
@@ -390,7 +390,7 @@ func Test_isMatchPartOfQuery(t *testing.T) { //nolint:funlen
 	}
 }
 
-func Benchmark_isMatchPartOfQuery(b *testing.B) {
+func Benchmark_matchPartOfQuery(b *testing.B) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -441,13 +441,13 @@ func Benchmark_isMatchPartOfQuery(b *testing.B) {
 		d := d
 		b.Run(d.title, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				_, _ = isMatchPartOfQuery(d.req, d.matcher)
+				_, _ = matchPartOfQuery(d.req, d.matcher)
 			}
 		})
 	}
 }
 
-func Test_isMatchPartOfHeader(t *testing.T) { //nolint:funlen
+func Test_matchPartOfHeader(t *testing.T) { //nolint:funlen
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -498,7 +498,7 @@ func Test_isMatchPartOfHeader(t *testing.T) { //nolint:funlen
 	for _, d := range data {
 		d := d
 		t.Run(d.title, func(t *testing.T) {
-			b, err := isMatchPartOfHeader(d.req, d.matcher)
+			b, err := matchPartOfHeader(d.req, d.matcher)
 			if d.isErr {
 				require.NotNil(t, err)
 				return
@@ -513,7 +513,7 @@ func Test_isMatchPartOfHeader(t *testing.T) { //nolint:funlen
 	}
 }
 
-func Benchmark_isMatchPartOfHeader(b *testing.B) {
+func Benchmark_matchPartOfHeader(b *testing.B) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -564,13 +564,13 @@ func Benchmark_isMatchPartOfHeader(b *testing.B) {
 		d := d
 		b.Run(d.title, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				_, _ = isMatchPartOfHeader(d.req, d.matcher)
+				_, _ = matchPartOfHeader(d.req, d.matcher)
 			}
 		})
 	}
 }
 
-func Test_isMatchBodyString(t *testing.T) {
+func Test_matchBodyString(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -609,7 +609,7 @@ func Test_isMatchBodyString(t *testing.T) {
 	for _, d := range data {
 		d := d
 		t.Run(d.title, func(t *testing.T) {
-			b, err := isMatchBodyString(d.req, d.matcher)
+			b, err := matchBodyString(d.req, d.matcher)
 			if d.isErr {
 				require.NotNil(t, err)
 				return
@@ -624,7 +624,7 @@ func Test_isMatchBodyString(t *testing.T) {
 	}
 }
 
-func Benchmark_isMatchBodyString(b *testing.B) {
+func Benchmark_matchBodyString(b *testing.B) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -658,13 +658,13 @@ func Benchmark_isMatchBodyString(b *testing.B) {
 		d := d
 		b.Run(d.title, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				_, _ = isMatchBodyString(d.req, d.matcher)
+				_, _ = matchBodyString(d.req, d.matcher)
 			}
 		})
 	}
 }
 
-func Test_isMatchBodyJSONString(t *testing.T) {
+func Test_matchBodyJSONString(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -703,7 +703,7 @@ func Test_isMatchBodyJSONString(t *testing.T) {
 	for _, d := range data {
 		d := d
 		t.Run(d.title, func(t *testing.T) {
-			b, err := isMatchBodyJSONString(d.req, d.matcher)
+			b, err := matchBodyJSONString(d.req, d.matcher)
 			if d.isErr {
 				require.NotNil(t, err)
 				return
@@ -718,7 +718,7 @@ func Test_isMatchBodyJSONString(t *testing.T) {
 	}
 }
 
-func Benchmark_isMatchBodyJSONString(b *testing.B) {
+func Benchmark_matchBodyJSONString(b *testing.B) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -752,13 +752,13 @@ func Benchmark_isMatchBodyJSONString(b *testing.B) {
 		d := d
 		b.Run(d.title, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				_, _ = isMatchBodyJSONString(d.req, d.matcher)
+				_, _ = matchBodyJSONString(d.req, d.matcher)
 			}
 		})
 	}
 }
 
-func Test_isMatchBodyJSON(t *testing.T) {
+func Test_matchBodyJSON(t *testing.T) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -797,7 +797,7 @@ func Test_isMatchBodyJSON(t *testing.T) {
 	for _, d := range data {
 		d := d
 		t.Run(d.title, func(t *testing.T) {
-			b, err := isMatchBodyJSON(d.req, d.matcher)
+			b, err := matchBodyJSON(d.req, d.matcher)
 			if d.isErr {
 				require.NotNil(t, err)
 				return
@@ -812,7 +812,7 @@ func Test_isMatchBodyJSON(t *testing.T) {
 	}
 }
 
-func Benchmark_isMatchBodyJSON(b *testing.B) {
+func Benchmark_matchBodyJSON(b *testing.B) {
 	data := []struct {
 		title   string
 		req     *http.Request
@@ -846,7 +846,7 @@ func Benchmark_isMatchBodyJSON(b *testing.B) {
 		d := d
 		b.Run(d.title, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				_, _ = isMatchBodyJSON(d.req, d.matcher)
+				_, _ = matchBodyJSON(d.req, d.matcher)
 			}
 		})
 	}
