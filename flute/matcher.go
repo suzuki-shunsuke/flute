@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/suzuki-shunsuke/go-jsoneq/jsoneq"
+	"github.com/suzuki-shunsuke/go-dataeq/dataeq"
 )
 
 // isMatchService returns whether the request matches with the service.
@@ -115,7 +115,7 @@ func matchBodyJSONString(req *http.Request, matcher Matcher) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("failed to read the request body: %w", err)
 	}
-	return jsoneq.Equal(b, []byte(matcher.BodyJSONString))
+	return dataeq.JSON.Equal(b, []byte(matcher.BodyJSONString))
 }
 
 func matchBodyJSON(req *http.Request, matcher Matcher) (bool, error) {
@@ -129,5 +129,5 @@ func matchBodyJSON(req *http.Request, matcher Matcher) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("failed to read the request body: %w", err)
 	}
-	return jsoneq.Equal(b, matcher.BodyJSON)
+	return dataeq.JSON.Equal(b, matcher.BodyJSON)
 }
