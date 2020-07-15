@@ -1,6 +1,7 @@
 package flute_test
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -40,7 +41,12 @@ func Example_simpleMock() {
 			},
 		},
 	}
-	resp, err := http.Get("http://example.com/users?id=10")
+	ctx := context.Background()
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "http://example.com/users?id=10", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Fatal(err)
 	}
