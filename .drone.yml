@@ -12,7 +12,7 @@ steps:
   commands:
   - sh scripts/durl.sh
 - name: download go modules
-  image: golang:1.14.5
+  image: golang:1.14.6
   commands:
   - go mod download
   volumes: &volumes
@@ -24,13 +24,13 @@ steps:
   - golangci-lint run
   volumes: *volumes
 - name: benchmark
-  image: golang:1.14.5
+  image: golang:1.14.6
   commands:
   - cd flute
   - go test -bench=. -benchmem
   volumes: *volumes
 - name: codecov
-  image: golang:1.14.5
+  image: golang:1.14.6
   commands:
   # bash and cgo seem to be required
   - bash scripts/codecov-test.sh
