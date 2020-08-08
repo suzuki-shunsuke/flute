@@ -29,14 +29,12 @@ steps:
   - cd flute
   - go test -bench=. -benchmem
   volumes: *volumes
-- name: codecov
-  image: golang:1.14.6
+- name: test
+  image: golang:1.14.7
   commands:
   # bash and cgo seem to be required
-  - bash scripts/codecov-test.sh
-  - curl -s https://codecov.io/bash > /tmp/codecov.sh
-  - test "$LOCAL" = "true" -o "$DRONE_BUILD_EVENT" = "pull_request" || bash /tmp/codecov.sh
-  volumes: *volumes
+  - bash ci/test.sh "$DRONE_REPO_NAME"
   environment:
-    CODECOV_TOKEN:
-      from_secret: codecov_token
+    CC_TEST_REPORTER_ID:
+      from_secret: cc_test_reporter_id
+  volumes: *volumes
