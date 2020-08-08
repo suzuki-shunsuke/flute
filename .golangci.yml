@@ -4,6 +4,7 @@ linters:
   disable:
   - wsl
   - goerr113
+  - nlreturn
 run:
   skip-files:
   - flute/mock_round_tripper_test.go
