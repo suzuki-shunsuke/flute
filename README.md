@@ -3,11 +3,11 @@
 [![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)
 [![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://pkg.go.dev/github.com/suzuki-shunsuke/flute/flute)
 [![Build Status](https://cloud.drone.io/api/badges/suzuki-shunsuke/flute/status.svg)](https://cloud.drone.io/suzuki-shunsuke/flute)
-[![codecov](https://codecov.io/gh/suzuki-shunsuke/flute/branch/master/graph/badge.svg)](https://codecov.io/gh/suzuki-shunsuke/flute)
+[![codecov](https://codecov.io/gh/suzuki-shunsuke/flute/branch/main/graph/badge.svg)](https://codecov.io/gh/suzuki-shunsuke/flute)
 [![Go Report Card](https://goreportcard.com/badge/github.com/suzuki-shunsuke/flute)](https://goreportcard.com/report/github.com/suzuki-shunsuke/flute)
 [![GitHub last commit](https://img.shields.io/github/last-commit/suzuki-shunsuke/flute.svg)](https://github.com/suzuki-shunsuke/flute)
 [![GitHub tag](https://img.shields.io/github/tag/suzuki-shunsuke/flute.svg)](https://github.com/suzuki-shunsuke/flute/releases)
-[![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/suzuki-shunsuke/flute/master/LICENSE)
+[![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/suzuki-shunsuke/flute/main/LICENSE)
 
 Golang HTTP client testing framework
 
