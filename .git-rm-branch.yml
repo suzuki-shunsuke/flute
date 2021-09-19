@@ -1,12 +1,12 @@
 ---
 local:
   protected:
-  - master
+  - main
   merged:
-  - origin/master
+  - origin/main
 remote:
   origin:
     protected:
-    - master
+    - main
     merged:
-    - origin/master
+    - origin/main
