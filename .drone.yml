@@ -8,29 +8,29 @@ volumes:
   temp: {}
 steps:
 - name: durl
-  image: quay.io/suzuki_shunsuke/durl:1.0.0
+  image: quay.io/suzuki_shunsuke/durl:1.0.0@sha256:2753542727d8e68a823dece28f60bc0bae7d0ebac291e3563939802ff2bef6c0
   commands:
   - sh scripts/durl.sh
 - name: download go modules
-  image: golang:1.19.3
+  image: golang:1.19.3@sha256:10e3c0f39f8e237baa5b66c5295c578cac42a99536cc9333d8505324a82407d9
   commands:
   - go mod download
   volumes: &volumes
   - name: gopath
     path: /go
 - name: golangci-lint
-  image: golangci/golangci-lint:v1.30.0-alpine
+  image: golangci/golangci-lint:v1.30.0-alpine@sha256:8e7d2a180e874e9574b172ae64b969a1491f7e2e15032036a3d1174185236c3b
   commands:
   - golangci-lint run
   volumes: *volumes
 - name: benchmark
-  image: golang:1.19.3
+  image: golang:1.19.3@sha256:10e3c0f39f8e237baa5b66c5295c578cac42a99536cc9333d8505324a82407d9
   commands:
   - cd flute
   - go test -bench=. -benchmem
   volumes: *volumes
 - name: codecov
-  image: golang:1.19.3
+  image: golang:1.19.3@sha256:10e3c0f39f8e237baa5b66c5295c578cac42a99536cc9333d8505324a82407d9
   commands:
   # bash and cgo seem to be required
   - bash scripts/codecov-test.sh
