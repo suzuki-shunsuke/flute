@@ -1,10 +1,24 @@
 ---
+issues:
+  exclude-files:
+    - flute/mock_round_tripper_test.go
 linters:
   enable-all: true
   disable:
-  - wsl
-  - goerr113
-  - nlreturn
-run:
-  skip-files:
-  - flute/mock_round_tripper_test.go
+    - wsl
+    - err113
+    - nlreturn
+    - execinquery # WARN The linter 'execinquery' is deprecated (since v1.58.0) due to: The repository of the linter has been archived by the owner.  
+    - gomnd # WARN The linter 'gomnd' is deprecated (since v1.58.0) due to: The linter has been renamed. Replaced by mnd. 
+    # WARN [linters_context] copyloopvar: this linter is disabled because the Go version (1.19) of your project is lower than Go 1.22 
+    # WARN [linters_context] intrange: this linter is disabled because the Go version (1.19) of your project is lower than Go 1.22
+    - varnamelen
+    - exhaustruct
+    - depguard
+    # TODO
+    - wrapcheck
+    - thelper
+    - testifylint
+    - paralleltest
+    - gocritic
+    - revive

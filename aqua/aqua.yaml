@@ -1,0 +1,14 @@
+---
+# aqua - Declarative CLI Version Manager
+# https://aquaproj.github.io/
+checksum:
+  # Enable Checksum Verification
+  # https://aquaproj.github.io/docs/tutorial-extras/checksum/
+  enabled: true
+  require_checksum: true
+registries:
+  - type: standard
+    ref: v4.203.0 # renovate: depName=aquaproj/aqua-registry
+packages:
+  # Split packages per package with `import` to avoid pull requests' conflict
+  - import: imports/*.yaml

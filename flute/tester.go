@@ -3,7 +3,7 @@ package flute
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 	"testing"
@@ -64,7 +64,7 @@ func testBodyString(t *testing.T, req *http.Request, service Service, route Rout
 			makeMsg("request body should match", service.Endpoint, route.Name))
 		return
 	}
-	b, err := ioutil.ReadAll(req.Body)
+	b, err := io.ReadAll(req.Body)
 	if err != nil {
 		assert.Fail(
 			t, makeMsg(
@@ -107,7 +107,7 @@ func testBodyJSON(t *testing.T, req *http.Request, service Service, route Route)
 			makeMsg("request body should match", service.Endpoint, route.Name))
 		return
 	}
-	b, err := ioutil.ReadAll(req.Body)
+	b, err := io.ReadAll(req.Body)
 	if err != nil {
 		assert.Fail(
 			t, makeMsg(
@@ -138,7 +138,7 @@ func testBodyJSONString(t *testing.T, req *http.Request, service Service, route 
 			makeMsg("request body should match", service.Endpoint, route.Name))
 		return
 	}
-	b, err := ioutil.ReadAll(req.Body)
+	b, err := io.ReadAll(req.Body)
 	if err != nil {
 		assert.Fail(
 			t, makeMsg(

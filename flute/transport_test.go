@@ -3,7 +3,6 @@ package flute_test
 import (
 	"errors"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -31,8 +30,8 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 					Host:   "example.com",
 					Path:   "/users",
 				},
-				Method: "POST",
-				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+				Method: http.MethodPost,
+				Body:   io.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
 				Header: http.Header{
 					"Authorization": []string{"token " + token},
 				},
@@ -48,13 +47,13 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 						Routes: []flute.Route{
 							{
 								Matcher: flute.Matcher{
-									Method: "GET",
+									Method: http.MethodGet,
 								},
 							},
 							{
 								Name: "create a user",
 								Matcher: flute.Matcher{
-									Method: "POST",
+									Method: http.MethodPost,
 									Path:   "/users",
 								},
 								Tester: flute.Tester{
@@ -68,7 +67,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 								},
 								Response: flute.Response{
 									Base: http.Response{
-										StatusCode: 201,
+										StatusCode: http.StatusCreated,
 									},
 									BodyString: `{
 										  "id": 10,
@@ -82,7 +81,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 				},
 			},
 			exp: &http.Response{
-				StatusCode: 201,
+				StatusCode: http.StatusCreated,
 			},
 		},
 		{
@@ -93,8 +92,8 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 					Host:   "example.com",
 					Path:   "/users",
 				},
-				Method: "POST",
-				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+				Method: http.MethodPost,
+				Body:   io.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
 				Header: http.Header{
 					"Authorization": []string{"token " + token},
 				},
@@ -116,11 +115,11 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 				},
 				Transport: flute.NewMockRoundTripper(t, gomic.DoNothing).
 					SetReturnRoundTrip(&http.Response{
-						StatusCode: 401,
+						StatusCode: http.StatusUnauthorized,
 					}, nil),
 			},
 			exp: &http.Response{
-				StatusCode: 401,
+				StatusCode: http.StatusUnauthorized,
 			},
 		},
 		{
@@ -131,8 +130,8 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 					Host:   "example.com",
 					Path:   "/users",
 				},
-				Method: "POST",
-				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+				Method: http.MethodPost,
+				Body:   io.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
 				Header: http.Header{
 					"Authorization": []string{"token " + token},
 				},
@@ -155,11 +154,11 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 				},
 				Transport: flute.NewMockRoundTripper(t, gomic.DoNothing).
 					SetReturnRoundTrip(&http.Response{
-						StatusCode: 401,
+						StatusCode: http.StatusUnauthorized,
 					}, nil),
 			},
 			exp: &http.Response{
-				StatusCode: 401,
+				StatusCode: http.StatusUnauthorized,
 			},
 		},
 		{
@@ -170,8 +169,8 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 					Host:   "example.com",
 					Path:   "/users",
 				},
-				Method: "POST",
-				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+				Method: http.MethodPost,
+				Body:   io.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
 				Header: http.Header{
 					"Authorization": []string{"token " + token},
 				},
@@ -193,7 +192,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 				},
 			},
 			exp: &http.Response{
-				StatusCode: 404,
+				StatusCode: http.StatusNotFound,
 			},
 		},
 		{
@@ -202,11 +201,11 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 			transport: flute.Transport{
 				Transport: flute.NewMockRoundTripper(t, gomic.DoNothing).
 					SetReturnRoundTrip(&http.Response{
-						StatusCode: 401,
+						StatusCode: http.StatusUnauthorized,
 					}, nil),
 			},
 			exp: &http.Response{
-				StatusCode: 401,
+				StatusCode: http.StatusUnauthorized,
 			},
 		},
 	}
@@ -216,14 +215,14 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 		t.Run(d.title, func(t *testing.T) {
 			resp, err := d.transport.RoundTrip(d.req)
 			if resp != nil && resp.Body != nil {
-				_, _ = io.Copy(ioutil.Discard, resp.Body)
+				_, _ = io.Copy(io.Discard, resp.Body)
 				resp.Body.Close()
 			}
 			if d.isErr {
-				require.NotNil(t, err)
+				require.Error(t, err)
 				return
 			}
-			require.Nil(t, err)
+			require.NoError(t, err)
 			require.Equal(t, d.exp.StatusCode, resp.StatusCode)
 		})
 	}
@@ -241,13 +240,13 @@ func BenchmarkTransport_RoundTrip(b *testing.B) { //nolint:funlen
 				Routes: []flute.Route{
 					{
 						Matcher: flute.Matcher{
-							Method: "GET",
+							Method: http.MethodGet,
 						},
 					},
 					{
 						Name: "create a user",
 						Matcher: flute.Matcher{
-							Method: "POST",
+							Method: http.MethodPost,
 							Path:   "/users",
 						},
 						Tester: flute.Tester{
@@ -261,7 +260,7 @@ func BenchmarkTransport_RoundTrip(b *testing.B) { //nolint:funlen
 						},
 						Response: flute.Response{
 							Base: http.Response{
-								StatusCode: 201,
+								StatusCode: http.StatusCreated,
 							},
 							BodyString: `{
 										  "id": 10,
@@ -283,13 +282,13 @@ func BenchmarkTransport_RoundTrip(b *testing.B) { //nolint:funlen
 				Host:   "example.com",
 				Path:   "/users",
 			},
-			Method: "POST",
-			Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+			Method: http.MethodPost,
+			Body:   io.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
 			Header: http.Header{
 				"Authorization": []string{"token " + token},
 			},
 		})
-		_, _ = io.Copy(ioutil.Discard, resp.Body)
+		_, _ = io.Copy(io.Discard, resp.Body)
 		resp.Body.Close()
 	}
 }

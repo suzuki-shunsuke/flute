@@ -3,7 +3,6 @@ package flute
 import (
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 )
@@ -23,10 +22,10 @@ func createHTTPResponse(req *http.Request, resp Response) (*http.Response, error
 				StatusCode: http.StatusInternalServerError,
 			}, err
 		}
-		body = ioutil.NopCloser(strings.NewReader(string(b)))
+		body = io.NopCloser(strings.NewReader(string(b)))
 	}
 	if resp.BodyString != "" {
-		body = ioutil.NopCloser(strings.NewReader(resp.BodyString))
+		body = io.NopCloser(strings.NewReader(resp.BodyString))
 	}
 	if body == nil {
 		// https://golang.org/pkg/net/http/#Response
@@ -34,7 +33,7 @@ func createHTTPResponse(req *http.Request, resp Response) (*http.Response, error
 		// non-nil, even on responses without a body or responses with
 		// a zero-length body. It is the caller's responsibility to
 		// close Body.
-		body = ioutil.NopCloser(strings.NewReader(""))
+		body = io.NopCloser(strings.NewReader(""))
 	}
 
 	r.Body = body

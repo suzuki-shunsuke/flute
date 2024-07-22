@@ -2,7 +2,7 @@ package flute
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"reflect"
 	"strings"
@@ -97,7 +97,7 @@ func matchBodyString(req *http.Request, matcher Matcher) (bool, error) {
 	if req.Body == nil {
 		return false, nil
 	}
-	b, err := ioutil.ReadAll(req.Body)
+	b, err := io.ReadAll(req.Body)
 	if err != nil {
 		return false, fmt.Errorf("failed to read the request body: %w", err)
 	}
@@ -111,7 +111,7 @@ func matchBodyJSONString(req *http.Request, matcher Matcher) (bool, error) {
 	if req.Body == nil {
 		return false, nil
 	}
-	b, err := ioutil.ReadAll(req.Body)
+	b, err := io.ReadAll(req.Body)
 	if err != nil {
 		return false, fmt.Errorf("failed to read the request body: %w", err)
 	}
@@ -125,7 +125,7 @@ func matchBodyJSON(req *http.Request, matcher Matcher) (bool, error) {
 	if req.Body == nil {
 		return false, nil
 	}
-	b, err := ioutil.ReadAll(req.Body)
+	b, err := io.ReadAll(req.Body)
 	if err != nil {
 		return false, fmt.Errorf("failed to read the request body: %w", err)
 	}

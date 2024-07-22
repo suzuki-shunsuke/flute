@@ -22,7 +22,7 @@ func TestClient_CreateUser(t *testing.T) {
 							{
 								Name: "create a user",
 								Matcher: flute.Matcher{
-									Method: "POST",
+									Method: http.MethodPost,
 									Path:   "/users",
 								},
 								Tester: flute.Tester{
@@ -36,7 +36,7 @@ func TestClient_CreateUser(t *testing.T) {
 								},
 								Response: flute.Response{
 									Base: http.Response{
-										StatusCode: 201,
+										StatusCode: http.StatusCreated,
 									},
 									BodyString: `{
 										  "id": 10,
@@ -55,7 +55,7 @@ func TestClient_CreateUser(t *testing.T) {
 		Name:  "foo",
 		Email: "foo@example.com",
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	require.Equal(t, &User{
 		ID:    10,
 		Name:  "foo",

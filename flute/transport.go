@@ -2,7 +2,7 @@ package flute
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"strings"
@@ -78,7 +78,7 @@ func makeNoMatchedRouteMsg(t *testing.T, req *http.Request) string {
 
 	body := ""
 	if req.Body != nil {
-		b, err := ioutil.ReadAll(req.Body)
+		b, err := io.ReadAll(req.Body)
 		if err != nil {
 			assert.Nil(t, err, "failed to reqd the request body")
 		} else {
@@ -102,6 +102,6 @@ func noMatchedRouteRoundTrip(t *testing.T, req *http.Request) (*http.Response, e
 	return &http.Response{
 		Request:    req,
 		StatusCode: http.StatusNotFound,
-		Body:       ioutil.NopCloser(strings.NewReader(`{"message": "no route matches the request"}`)),
+		Body:       io.NopCloser(strings.NewReader(`{"message": "no route matches the request"}`)),
 	}, nil
 }

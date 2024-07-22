@@ -3,7 +3,6 @@ package flute
 import (
 	"errors"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 	"testing"
@@ -42,7 +41,7 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 				},
 			},
 			exp: &http.Response{
-				Body: ioutil.NopCloser(strings.NewReader(`{"foo":"bar"}`)),
+				Body: io.NopCloser(strings.NewReader(`{"foo":"bar"}`)),
 			},
 			body: `{"foo":"bar"}`,
 		},
@@ -61,7 +60,7 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 				BodyString: `{"foo":"bar"}`,
 			},
 			exp: &http.Response{
-				Body: ioutil.NopCloser(strings.NewReader(`{"foo":"bar"}`)),
+				Body: io.NopCloser(strings.NewReader(`{"foo":"bar"}`)),
 			},
 			body: `{"foo":"bar"}`,
 		},
@@ -70,23 +69,23 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 			req:   &http.Request{},
 			resp:  Response{},
 			exp: &http.Response{
-				Body: ioutil.NopCloser(strings.NewReader("")),
+				Body: io.NopCloser(strings.NewReader("")),
 			},
 		},
 		{
 			title: "resp.Response",
 			req:   &http.Request{},
 			resp: Response{
-				Response: func(req *http.Request) (*http.Response, error) {
+				Response: func(_ *http.Request) (*http.Response, error) {
 					return &http.Response{
-						Body:       ioutil.NopCloser(strings.NewReader("foo")),
-						StatusCode: 403,
+						Body:       io.NopCloser(strings.NewReader("foo")),
+						StatusCode: http.StatusForbidden,
 					}, nil
 				},
 			},
 			exp: &http.Response{
-				Body:       ioutil.NopCloser(strings.NewReader("foo")),
-				StatusCode: 403,
+				Body:       io.NopCloser(strings.NewReader("foo")),
+				StatusCode: http.StatusForbidden,
 			},
 			body: "foo",
 		},
@@ -99,15 +98,15 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 			var b []byte
 			if resp != nil && resp.Body != nil {
 				var err error
-				b, err = ioutil.ReadAll(resp.Body)
+				b, err = io.ReadAll(resp.Body)
 				resp.Body.Close()
-				require.Nil(t, err)
+				require.NoError(t, err)
 			}
 			if d.isErr {
-				require.NotNil(t, err)
+				require.Error(t, err)
 				return
 			}
-			require.Nil(t, err)
+			require.NoError(t, err)
 			require.NotNil(t, resp)
 
 			// https://golang.org/pkg/net/http/#Response
@@ -170,10 +169,10 @@ func Benchmark_createHTTPResponse(b *testing.B) { //nolint:funlen
 			title: "resp.Response",
 			req:   &http.Request{},
 			resp: Response{
-				Response: func(req *http.Request) (*http.Response, error) {
+				Response: func(_ *http.Request) (*http.Response, error) {
 					return &http.Response{
-						Body:       ioutil.NopCloser(strings.NewReader("foo")),
-						StatusCode: 403,
+						Body:       io.NopCloser(strings.NewReader("foo")),
+						StatusCode: http.StatusForbidden,
 					}, nil
 				},
 			},
@@ -187,7 +186,7 @@ func Benchmark_createHTTPResponse(b *testing.B) { //nolint:funlen
 			for i := 0; i < b.N; i++ {
 				resp, _ := createHTTPResponse(d.req, d.resp)
 				if resp != nil && resp.Body != nil {
-					_, _ = io.Copy(ioutil.Discard, resp.Body)
+					_, _ = io.Copy(io.Discard, resp.Body)
 					resp.Body.Close()
 				}
 			}
