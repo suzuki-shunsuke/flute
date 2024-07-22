@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/suzuki-shunsuke/go-dataeq/dataeq"
+	"github.com/suzuki-shunsuke/go-dataeq/v2/dataeq"
 )
 
 // isMatchService returns whether the request matches with the service.

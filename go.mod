@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/stretchr/testify v1.9.0
-	github.com/suzuki-shunsuke/go-dataeq v1.0.1
+	github.com/suzuki-shunsuke/go-dataeq/v2 v2.0.0
 	github.com/suzuki-shunsuke/gomic v0.6.0
 )
 
