@@ -184,10 +184,10 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 		t.Run(d.title, func(t *testing.T) {
 			b, err := isMatch(d.req, d.matcher)
 			if d.isErr {
-				require.NotNil(t, err)
+				require.Error(t, err)
 				return
 			}
-			require.Nil(t, err)
+			require.NoError(t, err)
 			if d.exp {
 				require.True(t, b)
 				return
@@ -377,10 +377,10 @@ func Test_matchPartOfQuery(t *testing.T) { //nolint:funlen
 		t.Run(d.title, func(t *testing.T) {
 			b, err := matchPartOfQuery(d.req, d.matcher)
 			if d.isErr {
-				require.NotNil(t, err)
+				require.Error(t, err)
 				return
 			}
-			require.Nil(t, err)
+			require.NoError(t, err)
 			if d.exp {
 				require.True(t, b)
 				return
@@ -500,10 +500,10 @@ func Test_matchPartOfHeader(t *testing.T) { //nolint:funlen
 		t.Run(d.title, func(t *testing.T) {
 			b, err := matchPartOfHeader(d.req, d.matcher)
 			if d.isErr {
-				require.NotNil(t, err)
+				require.Error(t, err)
 				return
 			}
-			require.Nil(t, err)
+			require.NoError(t, err)
 			if d.exp {
 				require.True(t, b)
 				return
@@ -611,10 +611,10 @@ func Test_matchBodyString(t *testing.T) {
 		t.Run(d.title, func(t *testing.T) {
 			b, err := matchBodyString(d.req, d.matcher)
 			if d.isErr {
-				require.NotNil(t, err)
+				require.Error(t, err)
 				return
 			}
-			require.Nil(t, err)
+			require.NoError(t, err)
 			if d.exp {
 				require.True(t, b)
 				return
@@ -705,10 +705,10 @@ func Test_matchBodyJSONString(t *testing.T) {
 		t.Run(d.title, func(t *testing.T) {
 			b, err := matchBodyJSONString(d.req, d.matcher)
 			if d.isErr {
-				require.NotNil(t, err)
+				require.Error(t, err)
 				return
 			}
-			require.Nil(t, err)
+			require.NoError(t, err)
 			if d.exp {
 				require.True(t, b)
 				return
@@ -799,10 +799,10 @@ func Test_matchBodyJSON(t *testing.T) {
 		t.Run(d.title, func(t *testing.T) {
 			b, err := matchBodyJSON(d.req, d.matcher)
 			if d.isErr {
-				require.NotNil(t, err)
+				require.Error(t, err)
 				return
 			}
-			require.Nil(t, err)
+			require.NoError(t, err)
 			if d.exp {
 				require.True(t, b)
 				return

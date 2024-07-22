@@ -101,13 +101,13 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 				var err error
 				b, err = ioutil.ReadAll(resp.Body)
 				resp.Body.Close()
-				require.Nil(t, err)
+				require.NoError(t, err)
 			}
 			if d.isErr {
-				require.NotNil(t, err)
+				require.Error(t, err)
 				return
 			}
-			require.Nil(t, err)
+			require.NoError(t, err)
 			require.NotNil(t, resp)
 
 			// https://golang.org/pkg/net/http/#Response

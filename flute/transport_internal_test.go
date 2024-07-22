@@ -2,7 +2,6 @@ package flute
 
 import (
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -28,7 +27,7 @@ func Test_makeNoMatchedRouteMsg(t *testing.T) {
 					RawQuery: "print=true",
 				},
 				Method: http.MethodPost,
-				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+				Body:   io.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
 				Header: http.Header{
 					"Authorization": []string{"token XXXXX"},
 				},
@@ -76,14 +75,14 @@ func Test_noMatchedRouteRoundTrip(t *testing.T) {
 		t.Run(d.title, func(t *testing.T) {
 			resp, err := noMatchedRouteRoundTrip(d.t, d.req)
 			if resp != nil && resp.Body != nil {
-				_, _ = io.Copy(ioutil.Discard, resp.Body)
+				_, _ = io.Copy(io.Discard, resp.Body)
 				resp.Body.Close()
 			}
 			if d.isErr {
-				assert.NotNil(t, err)
+				assert.Error(t, err)
 				return
 			}
-			assert.Nil(t, err)
+			assert.NoError(t, err)
 			require.Equal(t, d.statusCode, resp.StatusCode)
 		})
 	}

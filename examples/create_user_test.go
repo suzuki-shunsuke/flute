@@ -55,7 +55,7 @@ func TestClient_CreateUser(t *testing.T) {
 		Name:  "foo",
 		Email: "foo@example.com",
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	require.Equal(t, &User{
 		ID:    10,
 		Name:  "foo",

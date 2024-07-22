@@ -220,10 +220,10 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 				resp.Body.Close()
 			}
 			if d.isErr {
-				require.NotNil(t, err)
+				require.Error(t, err)
 				return
 			}
-			require.Nil(t, err)
+			require.NoError(t, err)
 			require.Equal(t, d.exp.StatusCode, resp.StatusCode)
 		})
 	}
