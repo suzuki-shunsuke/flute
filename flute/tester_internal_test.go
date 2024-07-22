@@ -1,7 +1,7 @@
 package flute
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -25,7 +25,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 					Path:     "/users",
 					RawQuery: "name=foo&age=10",
 				},
-				Body: ioutil.NopCloser(strings.NewReader(`{
+				Body: io.NopCloser(strings.NewReader(`{
 				  "name": "foo",
 				  "email": "foo@example.com"
 				}`)),
@@ -40,7 +40,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 					Path:     "/users",
 					RawQuery: "name=foo&age=10",
 				},
-				Body: ioutil.NopCloser(strings.NewReader(`{
+				Body: io.NopCloser(strings.NewReader(`{
 				  "name": "foo",
 				  "email": "foo@example.com"
 				}`)),
@@ -79,7 +79,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 		{
 			title: "body string",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`foo`)),
+				Body: io.NopCloser(strings.NewReader(`foo`)),
 			},
 			service: Service{},
 			route: Route{
@@ -91,7 +91,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 		{
 			title: "body json",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`[{"name": "foo"}]`)),
+				Body: io.NopCloser(strings.NewReader(`[{"name": "foo"}]`)),
 			},
 			service: Service{},
 			route: Route{
@@ -151,7 +151,7 @@ func Test_testBodyString(t *testing.T) {
 		{
 			title: "normal",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`"foo"`)),
+				Body: io.NopCloser(strings.NewReader(`"foo"`)),
 			},
 			service: Service{},
 			route: Route{
@@ -250,7 +250,7 @@ func Test_testBodyJSON(t *testing.T) {
 		{
 			title: "normal",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`[{"foo":"bar"}]`)),
+				Body: io.NopCloser(strings.NewReader(`[{"foo":"bar"}]`)),
 			},
 			service: Service{},
 			route: Route{
@@ -291,7 +291,7 @@ func Test_testBodyJSONString(t *testing.T) {
 		{
 			title: "normal",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`[{"foo":"bar"}]`)),
+				Body: io.NopCloser(strings.NewReader(`[{"foo":"bar"}]`)),
 			},
 			service: Service{},
 			route: Route{

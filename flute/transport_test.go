@@ -32,7 +32,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 					Path:   "/users",
 				},
 				Method: http.MethodPost,
-				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+				Body:   io.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
 				Header: http.Header{
 					"Authorization": []string{"token " + token},
 				},
@@ -94,7 +94,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 					Path:   "/users",
 				},
 				Method: http.MethodPost,
-				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+				Body:   io.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
 				Header: http.Header{
 					"Authorization": []string{"token " + token},
 				},
@@ -132,7 +132,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 					Path:   "/users",
 				},
 				Method: http.MethodPost,
-				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+				Body:   io.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
 				Header: http.Header{
 					"Authorization": []string{"token " + token},
 				},
@@ -171,7 +171,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 					Path:   "/users",
 				},
 				Method: http.MethodPost,
-				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+				Body:   io.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
 				Header: http.Header{
 					"Authorization": []string{"token " + token},
 				},
@@ -284,7 +284,7 @@ func BenchmarkTransport_RoundTrip(b *testing.B) { //nolint:funlen
 				Path:   "/users",
 			},
 			Method: http.MethodPost,
-			Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
+			Body:   io.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
 			Header: http.Header{
 				"Authorization": []string{"token " + token},
 			},

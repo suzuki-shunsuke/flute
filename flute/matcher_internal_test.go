@@ -1,7 +1,7 @@
 package flute
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -92,7 +92,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 		{
 			title: "body string doesn't match",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader("foo")),
+				Body: io.NopCloser(strings.NewReader("foo")),
 			},
 			matcher: Matcher{
 				BodyString: "hello",
@@ -101,7 +101,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 		{
 			title: "body json doesn't match",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`"foo"`)),
+				Body: io.NopCloser(strings.NewReader(`"foo"`)),
 			},
 			matcher: Matcher{
 				BodyJSON: 10,
@@ -110,7 +110,7 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 		{
 			title: "body json string doesn't match",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`"foo"`)),
+				Body: io.NopCloser(strings.NewReader(`"foo"`)),
 			},
 			matcher: Matcher{
 				BodyJSONString: `"bar"`,
@@ -226,7 +226,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 		{
 			title: "body string doesn't match",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader("foo")),
+				Body: io.NopCloser(strings.NewReader("foo")),
 			},
 			matcher: Matcher{
 				BodyString: "hello",
@@ -235,7 +235,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 		{
 			title: "body json doesn't match",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`"foo"`)),
+				Body: io.NopCloser(strings.NewReader(`"foo"`)),
 			},
 			matcher: Matcher{
 				BodyJSON: 10,
@@ -244,7 +244,7 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 		{
 			title: "body json string doesn't match",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`"foo"`)),
+				Body: io.NopCloser(strings.NewReader(`"foo"`)),
 			},
 			matcher: Matcher{
 				BodyJSONString: `"bar"`,
@@ -588,7 +588,7 @@ func Test_matchBodyString(t *testing.T) {
 		{
 			title: "request body matches",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader("foo")),
+				Body: io.NopCloser(strings.NewReader("foo")),
 			},
 			matcher: Matcher{
 				BodyString: "foo",
@@ -598,7 +598,7 @@ func Test_matchBodyString(t *testing.T) {
 		{
 			title: "request body doesn't match",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader("foo")),
+				Body: io.NopCloser(strings.NewReader("foo")),
 			},
 			matcher: Matcher{
 				BodyString: "bar",
@@ -637,7 +637,7 @@ func Benchmark_matchBodyString(b *testing.B) {
 		{
 			title: "request body matches",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader("foo")),
+				Body: io.NopCloser(strings.NewReader("foo")),
 			},
 			matcher: Matcher{
 				BodyString: "foo",
@@ -646,7 +646,7 @@ func Benchmark_matchBodyString(b *testing.B) {
 		{
 			title: "request body doesn't match",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader("foo")),
+				Body: io.NopCloser(strings.NewReader("foo")),
 			},
 			matcher: Matcher{
 				BodyString: "bar",
@@ -682,7 +682,7 @@ func Test_matchBodyJSONString(t *testing.T) {
 		{
 			title: "request body json matches",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
+				Body: io.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
 			matcher: Matcher{
 				BodyJSONString: `{"name": "foo", "id": 10}`,
@@ -692,7 +692,7 @@ func Test_matchBodyJSONString(t *testing.T) {
 		{
 			title: "request body json doesn't match",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
+				Body: io.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
 			matcher: Matcher{
 				BodyJSONString: `{"name": "foo", "id": 9}`,
@@ -731,7 +731,7 @@ func Benchmark_matchBodyJSONString(b *testing.B) {
 		{
 			title: "request body json matches",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
+				Body: io.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
 			matcher: Matcher{
 				BodyJSONString: `{"name": "foo", "id": 10}`,
@@ -740,7 +740,7 @@ func Benchmark_matchBodyJSONString(b *testing.B) {
 		{
 			title: "request body json doesn't match",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
+				Body: io.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
 			matcher: Matcher{
 				BodyJSONString: `{"name": "foo", "id": 9}`,
@@ -776,7 +776,7 @@ func Test_matchBodyJSON(t *testing.T) {
 		{
 			title: "request body json matches",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`{"name": "foo"}`)),
+				Body: io.NopCloser(strings.NewReader(`{"name": "foo"}`)),
 			},
 			matcher: Matcher{
 				BodyJSON: map[string]interface{}{"name": "foo"},
@@ -786,7 +786,7 @@ func Test_matchBodyJSON(t *testing.T) {
 		{
 			title: "request body json doesn't match",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
+				Body: io.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
 			matcher: Matcher{
 				BodyJSON: map[string]interface{}{"name": "foo"},
@@ -825,7 +825,7 @@ func Benchmark_matchBodyJSON(b *testing.B) {
 		{
 			title: "request body json matches",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`{"name": "foo"}`)),
+				Body: io.NopCloser(strings.NewReader(`{"name": "foo"}`)),
 			},
 			matcher: Matcher{
 				BodyJSON: map[string]interface{}{"name": "foo"},
@@ -834,7 +834,7 @@ func Benchmark_matchBodyJSON(b *testing.B) {
 		{
 			title: "request body json doesn't match",
 			req: &http.Request{
-				Body: ioutil.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
+				Body: io.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
 			matcher: Matcher{
 				BodyJSON: map[string]interface{}{"name": "foo"},
