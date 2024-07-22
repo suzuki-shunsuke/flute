@@ -12,7 +12,7 @@ steps:
   commands:
   - sh scripts/durl.sh
 - name: download go modules
-  image: golang:1.19.3@sha256:10e3c0f39f8e237baa5b66c5295c578cac42a99536cc9333d8505324a82407d9
+  image: golang:1.22.5@sha256:829eff99a4b2abffe68f6a3847337bf6455d69d17e49ec1a97dac78834754bd6
   commands:
   - go mod download
   volumes: &volumes
@@ -24,13 +24,13 @@ steps:
   - golangci-lint run
   volumes: *volumes
 - name: benchmark
-  image: golang:1.19.3@sha256:10e3c0f39f8e237baa5b66c5295c578cac42a99536cc9333d8505324a82407d9
+  image: golang:1.22.5@sha256:829eff99a4b2abffe68f6a3847337bf6455d69d17e49ec1a97dac78834754bd6
   commands:
   - cd flute
   - go test -bench=. -benchmem
   volumes: *volumes
 - name: codecov
-  image: golang:1.19.3@sha256:10e3c0f39f8e237baa5b66c5295c578cac42a99536cc9333d8505324a82407d9
+  image: golang:1.22.5@sha256:829eff99a4b2abffe68f6a3847337bf6455d69d17e49ec1a97dac78834754bd6
   commands:
   # bash and cgo seem to be required
   - bash scripts/codecov-test.sh
