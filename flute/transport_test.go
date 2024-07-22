@@ -3,7 +3,6 @@ package flute_test
 import (
 	"errors"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -216,7 +215,7 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 		t.Run(d.title, func(t *testing.T) {
 			resp, err := d.transport.RoundTrip(d.req)
 			if resp != nil && resp.Body != nil {
-				_, _ = io.Copy(ioutil.Discard, resp.Body)
+				_, _ = io.Copy(io.Discard, resp.Body)
 				resp.Body.Close()
 			}
 			if d.isErr {
@@ -289,7 +288,7 @@ func BenchmarkTransport_RoundTrip(b *testing.B) { //nolint:funlen
 				"Authorization": []string{"token " + token},
 			},
 		})
-		_, _ = io.Copy(ioutil.Discard, resp.Body)
+		_, _ = io.Copy(io.Discard, resp.Body)
 		resp.Body.Close()
 	}
 }

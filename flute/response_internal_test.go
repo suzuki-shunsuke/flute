@@ -76,7 +76,7 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 			title: "resp.Response",
 			req:   &http.Request{},
 			resp: Response{
-				Response: func(req *http.Request) (*http.Response, error) {
+				Response: func(_ *http.Request) (*http.Response, error) {
 					return &http.Response{
 						Body:       io.NopCloser(strings.NewReader("foo")),
 						StatusCode: http.StatusForbidden,
@@ -169,7 +169,7 @@ func Benchmark_createHTTPResponse(b *testing.B) { //nolint:funlen
 			title: "resp.Response",
 			req:   &http.Request{},
 			resp: Response{
-				Response: func(req *http.Request) (*http.Response, error) {
+				Response: func(_ *http.Request) (*http.Response, error) {
 					return &http.Response{
 						Body:       io.NopCloser(strings.NewReader("foo")),
 						StatusCode: http.StatusForbidden,
