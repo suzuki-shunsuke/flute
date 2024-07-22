@@ -83,10 +83,10 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 		{
 			title: "method doesn't match",
 			req: &http.Request{
-				Method: "GET",
+				Method: http.MethodGet,
 			},
 			matcher: Matcher{
-				Method: "POST",
+				Method: http.MethodPost,
 			},
 		},
 		{
@@ -217,10 +217,10 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 		{
 			title: "method doesn't match",
 			req: &http.Request{
-				Method: "GET",
+				Method: http.MethodGet,
 			},
 			matcher: Matcher{
-				Method: "POST",
+				Method: http.MethodPost,
 			},
 		},
 		{

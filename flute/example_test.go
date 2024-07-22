@@ -23,7 +23,7 @@ func Example_simpleMock() {
 						{
 							Name: "get a user",
 							Matcher: flute.Matcher{
-								Method: "GET",
+								Method: http.MethodGet,
 								Path:   "/users",
 								Query: url.Values{
 									"id": []string{"10"},
@@ -31,7 +31,7 @@ func Example_simpleMock() {
 							},
 							Response: flute.Response{
 								Base: http.Response{
-									StatusCode: 201,
+									StatusCode: http.StatusCreated,
 								},
 								BodyString: `{"id": 10, "name": "foo", "email": "foo@example.com"}`,
 							},

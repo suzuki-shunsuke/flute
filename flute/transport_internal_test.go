@@ -27,7 +27,7 @@ func Test_makeNoMatchedRouteMsg(t *testing.T) {
 					Path:     "/users",
 					RawQuery: "print=true",
 				},
-				Method: "POST",
+				Method: http.MethodPost,
 				Body:   ioutil.NopCloser(strings.NewReader(`{"name": "foo", "email": "foo@example.com"}`)),
 				Header: http.Header{
 					"Authorization": []string{"token XXXXX"},

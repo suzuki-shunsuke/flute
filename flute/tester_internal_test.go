@@ -20,7 +20,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 		{
 			title: "if the tester is nil, do nothing",
 			req: &http.Request{
-				Method: "POST",
+				Method: http.MethodPost,
 				URL: &url.URL{
 					Path:     "/users",
 					RawQuery: "name=foo&age=10",
@@ -35,7 +35,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 		{
 			title: "body json string",
 			req: &http.Request{
-				Method: "POST",
+				Method: http.MethodPost,
 				URL: &url.URL{
 					Path:     "/users",
 					RawQuery: "name=foo&age=10",
@@ -52,7 +52,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 			service: Service{},
 			route: Route{
 				Tester: Tester{
-					Method: "POST",
+					Method: http.MethodPost,
 					Path:   "/users",
 					BodyJSONString: `{
 					  "name": "foo",
@@ -221,7 +221,7 @@ func Test_testMethod(t *testing.T) {
 		{
 			title: "normal",
 			req: &http.Request{
-				Method: "PUT",
+				Method: http.MethodPut,
 			},
 			service: Service{},
 			route: Route{

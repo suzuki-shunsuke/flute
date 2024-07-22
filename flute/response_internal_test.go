@@ -80,13 +80,13 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 				Response: func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						Body:       ioutil.NopCloser(strings.NewReader("foo")),
-						StatusCode: 403,
+						StatusCode: http.StatusForbidden,
 					}, nil
 				},
 			},
 			exp: &http.Response{
 				Body:       ioutil.NopCloser(strings.NewReader("foo")),
-				StatusCode: 403,
+				StatusCode: http.StatusForbidden,
 			},
 			body: "foo",
 		},
@@ -173,7 +173,7 @@ func Benchmark_createHTTPResponse(b *testing.B) { //nolint:funlen
 				Response: func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						Body:       ioutil.NopCloser(strings.NewReader("foo")),
-						StatusCode: 403,
+						StatusCode: http.StatusForbidden,
 					}, nil
 				},
 			},
