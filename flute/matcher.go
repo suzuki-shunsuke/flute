@@ -14,7 +14,6 @@ import (
 // isMatchService checks the request URL.Scheme and URL.Host are equal to the service endpoint.
 func isMatchService(req *http.Request, service Service) bool {
 	return req.URL.Scheme+"://"+req.URL.Host == service.Endpoint
-
 }
 
 type matchFunc func(req *http.Request, matcher Matcher) (bool, error)
