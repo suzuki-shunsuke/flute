@@ -26,7 +26,8 @@ type (
 // NewMockRoundTripper returns MockRoundTripper .
 func NewMockRoundTripper(t *testing.T, cb gomic.CallbackNotImplemented) *MockRoundTripper {
 	return &MockRoundTripper{
-		t: t, name: "MockRoundTripper", callbackNotImplemented: cb}
+		t: t, name: "MockRoundTripper", callbackNotImplemented: cb,
+	}
 }
 
 // RoundTrip is a mock method.
