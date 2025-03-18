@@ -19,7 +19,7 @@ steps:
   - name: gopath
     path: /go
 - name: golangci-lint
-  image: golangci/golangci-lint:v1.64.7-alpine@sha256:6d0bd5c5f6918a481a1cb7d6fddd959657631287b9654e8a02e41290a7931b14
+  image: golangci/golangci-lint:v1.64.8-alpine@sha256:ae6460f78db54f22838d2a8aee0f2eaa4f785d5a01f638600072b60848f8deb4
   commands:
   - golangci-lint run
   volumes: *volumes
