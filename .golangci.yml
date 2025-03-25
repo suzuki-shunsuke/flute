@@ -15,6 +15,7 @@ linters:
     - varnamelen
     - wrapcheck
     - wsl
+    - godot
   exclusions:
     generated: lax
     presets:

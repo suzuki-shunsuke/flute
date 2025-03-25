@@ -45,7 +45,6 @@ body:
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			require.Equal(t, d.exp, makeNoMatchedRouteMsg(t, d.req))
 		})
@@ -71,7 +70,6 @@ func Test_noMatchedRouteRoundTrip(t *testing.T) {
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			resp, err := noMatchedRouteRoundTrip(d.t, d.req)
 			if resp != nil && resp.Body != nil {

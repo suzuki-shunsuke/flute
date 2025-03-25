@@ -28,7 +28,6 @@ func Test_isMatchService(t *testing.T) {
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			b := isMatchService(&http.Request{
 				URL: &url.URL{
@@ -49,7 +48,7 @@ func Test_isMatchService(t *testing.T) {
 
 func Benchmark_isMatchService(b *testing.B) {
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		isMatchService(&http.Request{
 			URL: &url.URL{
 				Scheme: "http",
@@ -180,7 +179,6 @@ func Test_isMatch(t *testing.T) { //nolint:funlen
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			b, err := isMatch(d.req, d.matcher)
 			if d.isErr {
@@ -315,9 +313,8 @@ func Benchmark_isMatch(b *testing.B) { //nolint:funlen
 
 	b.ResetTimer()
 	for _, d := range data {
-		d := d
 		b.Run(d.title, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				_, _ = isMatch(d.req, d.matcher)
 			}
 		})
@@ -373,7 +370,6 @@ func Test_matchPartOfQuery(t *testing.T) { //nolint:funlen
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			b, err := matchPartOfQuery(d.req, d.matcher)
 			if d.isErr {
@@ -438,9 +434,8 @@ func Benchmark_matchPartOfQuery(b *testing.B) {
 	}
 
 	for _, d := range data {
-		d := d
 		b.Run(d.title, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				_, _ = matchPartOfQuery(d.req, d.matcher)
 			}
 		})
@@ -496,7 +491,6 @@ func Test_matchPartOfHeader(t *testing.T) { //nolint:funlen
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			b, err := matchPartOfHeader(d.req, d.matcher)
 			if d.isErr {
@@ -561,9 +555,8 @@ func Benchmark_matchPartOfHeader(b *testing.B) {
 	}
 
 	for _, d := range data {
-		d := d
 		b.Run(d.title, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				_, _ = matchPartOfHeader(d.req, d.matcher)
 			}
 		})
@@ -607,7 +600,6 @@ func Test_matchBodyString(t *testing.T) {
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			b, err := matchBodyString(d.req, d.matcher)
 			if d.isErr {
@@ -655,9 +647,8 @@ func Benchmark_matchBodyString(b *testing.B) {
 	}
 
 	for _, d := range data {
-		d := d
 		b.Run(d.title, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				_, _ = matchBodyString(d.req, d.matcher)
 			}
 		})
@@ -701,7 +692,6 @@ func Test_matchBodyJSONString(t *testing.T) {
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			b, err := matchBodyJSONString(d.req, d.matcher)
 			if d.isErr {
@@ -749,9 +739,8 @@ func Benchmark_matchBodyJSONString(b *testing.B) {
 	}
 
 	for _, d := range data {
-		d := d
 		b.Run(d.title, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				_, _ = matchBodyJSONString(d.req, d.matcher)
 			}
 		})
@@ -795,7 +784,6 @@ func Test_matchBodyJSON(t *testing.T) {
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			b, err := matchBodyJSON(d.req, d.matcher)
 			if d.isErr {
@@ -843,9 +831,8 @@ func Benchmark_matchBodyJSON(b *testing.B) {
 	}
 
 	for _, d := range data {
-		d := d
 		b.Run(d.title, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				_, _ = matchBodyJSON(d.req, d.matcher)
 			}
 		})

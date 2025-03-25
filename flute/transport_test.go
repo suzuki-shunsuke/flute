@@ -211,7 +211,6 @@ func TestTransport_RoundTrip(t *testing.T) { //nolint:funlen
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			resp, err := d.transport.RoundTrip(d.req)
 			if resp != nil && resp.Body != nil {
@@ -275,7 +274,7 @@ func BenchmarkTransport_RoundTrip(b *testing.B) { //nolint:funlen
 	}
 
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		resp, _ := transport.RoundTrip(&http.Request{
 			URL: &url.URL{
 				Scheme: "http",

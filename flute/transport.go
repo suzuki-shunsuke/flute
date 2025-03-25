@@ -28,12 +28,10 @@ body:
 // RoundTrip traverses the matched route and run the test and returns response.
 func (transport Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	for _, service := range transport.Services {
-		service := service
 		if !isMatchService(req, service) {
 			continue
 		}
 		for _, route := range service.Routes {
-			route := route
 			b, err := isMatch(req, route.Matcher)
 			if err != nil {
 				if transport.T != nil {
