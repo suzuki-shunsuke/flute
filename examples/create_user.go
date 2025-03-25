@@ -1,6 +1,7 @@
 package examples
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"strings"
@@ -32,7 +33,8 @@ func (client *Client) CreateUser(user *User) (*User, *http.Response, error) {
 		return nil, nil, err
 	}
 
-	req, err := http.NewRequest("POST", "http://example.com/users", strings.NewReader(string(b)))
+	ctx := context.Background()
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, "http://example.com/users", strings.NewReader(string(b)))
 	if err != nil {
 		return nil, nil, err
 	}

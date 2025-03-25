@@ -107,7 +107,6 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			testRequest(t, d.req, d.service, d.route)
 		})
@@ -134,7 +133,6 @@ request name: create a user`,
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			require.Equal(t, d.exp, makeMsg(d.msg, d.srv, d.reqName))
 		})
@@ -173,7 +171,6 @@ func Test_testBodyString(t *testing.T) {
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			testBodyString(t, d.req, d.service, d.route)
 		})
@@ -204,7 +201,6 @@ func Test_testPath(t *testing.T) {
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			testPath(t, d.req, d.service, d.route)
 		})
@@ -233,7 +229,6 @@ func Test_testMethod(t *testing.T) {
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			testMethod(t, d.req, d.service, d.route)
 		})
@@ -274,7 +269,6 @@ func Test_testBodyJSON(t *testing.T) {
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			testBodyJSON(t, d.req, d.service, d.route)
 		})
@@ -313,7 +307,6 @@ func Test_testBodyJSONString(t *testing.T) {
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			testBodyJSONString(t, d.req, d.service, d.route)
 		})
@@ -348,7 +341,6 @@ func Test_testPartOfHeader(t *testing.T) {
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			testPartOfHeader(t, d.req, d.service, d.route)
 		})
@@ -381,7 +373,6 @@ func Test_testPartOfQuery(t *testing.T) {
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			testPartOfQuery(t, d.req, d.service, d.route)
 		})

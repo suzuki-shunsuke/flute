@@ -92,7 +92,6 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 	}
 
 	for _, d := range data {
-		d := d
 		t.Run(d.title, func(t *testing.T) {
 			resp, err := createHTTPResponse(d.req, d.resp)
 			var b []byte
@@ -181,9 +180,8 @@ func Benchmark_createHTTPResponse(b *testing.B) { //nolint:funlen
 	}
 
 	for _, d := range data {
-		d := d
 		b.Run(d.title, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				resp, _ := createHTTPResponse(d.req, d.resp)
 				if resp != nil && resp.Body != nil {
 					_, _ = io.Copy(io.Discard, resp.Body)
