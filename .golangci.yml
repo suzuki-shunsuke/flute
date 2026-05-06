@@ -5,9 +5,11 @@ linters:
     - depguard
     - err113
     - exhaustruct
+    - goconst
     - gocritic
     - mnd
     - nlreturn
+    - noinlineerr
     - paralleltest
     - revive
     - testifylint
@@ -15,6 +17,7 @@ linters:
     - varnamelen
     - wrapcheck
     - wsl
+    - wsl_v5
     - godot
   exclusions:
     generated: lax
