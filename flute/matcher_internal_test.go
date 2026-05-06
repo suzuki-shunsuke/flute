@@ -759,7 +759,7 @@ func Test_matchBodyJSON(t *testing.T) {
 			title: "request body is nil",
 			req:   &http.Request{},
 			matcher: Matcher{
-				BodyJSON: map[string]interface{}{"name": "foo"},
+				BodyJSON: map[string]any{"name": "foo"},
 			},
 		},
 		{
@@ -768,7 +768,7 @@ func Test_matchBodyJSON(t *testing.T) {
 				Body: io.NopCloser(strings.NewReader(`{"name": "foo"}`)),
 			},
 			matcher: Matcher{
-				BodyJSON: map[string]interface{}{"name": "foo"},
+				BodyJSON: map[string]any{"name": "foo"},
 			},
 			exp: true,
 		},
@@ -778,7 +778,7 @@ func Test_matchBodyJSON(t *testing.T) {
 				Body: io.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
 			matcher: Matcher{
-				BodyJSON: map[string]interface{}{"name": "foo"},
+				BodyJSON: map[string]any{"name": "foo"},
 			},
 		},
 	}
@@ -816,7 +816,7 @@ func Benchmark_matchBodyJSON(b *testing.B) {
 				Body: io.NopCloser(strings.NewReader(`{"name": "foo"}`)),
 			},
 			matcher: Matcher{
-				BodyJSON: map[string]interface{}{"name": "foo"},
+				BodyJSON: map[string]any{"name": "foo"},
 			},
 		},
 		{
@@ -825,7 +825,7 @@ func Benchmark_matchBodyJSON(b *testing.B) {
 				Body: io.NopCloser(strings.NewReader(`{"id": 10, "name": "foo"}`)),
 			},
 			matcher: Matcher{
-				BodyJSON: map[string]interface{}{"name": "foo"},
+				BodyJSON: map[string]any{"name": "foo"},
 			},
 		},
 	}

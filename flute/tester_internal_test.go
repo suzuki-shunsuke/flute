@@ -96,7 +96,7 @@ func Test_testRequest(t *testing.T) { //nolint:funlen
 			service: Service{},
 			route: Route{
 				Tester: Tester{
-					BodyJSON: []map[string]interface{}{
+					BodyJSON: []map[string]any{
 						{
 							"name": "foo",
 						},
