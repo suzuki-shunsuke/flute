@@ -36,7 +36,7 @@ func Test_createHTTPResponse(t *testing.T) { //nolint:funlen
 						"FOO": []string{"foo"},
 					},
 				},
-				BodyJSON: map[string]interface{}{
+				BodyJSON: map[string]any{
 					"foo": "bar",
 				},
 			},
@@ -137,7 +137,7 @@ func Benchmark_createHTTPResponse(b *testing.B) { //nolint:funlen
 						"FOO": []string{"foo"},
 					},
 				},
-				BodyJSON: map[string]interface{}{
+				BodyJSON: map[string]any{
 					"foo": "bar",
 				},
 			},

@@ -51,7 +51,7 @@ type (
 		// BodyString is the request body.
 		BodyString string
 		// BodyJSON is marshaled to JSON and compared to the request body as JSON.
-		BodyJSON interface{}
+		BodyJSON any
 		// BodyJSONString is a JSON string and compared to the request body as JSON.
 		BodyJSONString string
 		// PartOfHeader is the request header's conditions.
@@ -72,7 +72,7 @@ type (
 		// BodyString is the request body.
 		BodyString string
 		// BodyJSON is marshaled to JSON and compared to the request body as JSON.
-		BodyJSON interface{}
+		BodyJSON any
 		// BodyJSONString is a JSON string and compared to the request body as JSON.
 		BodyJSONString string
 		// PartOfHeader is the request header's conditions.
@@ -97,7 +97,7 @@ type (
 		Response func(req *http.Request) (*http.Response, error)
 		// BodyJSON is marshaled to JSON and used as the response body.
 		// BodyJSON and BodyString should only be set to one or the other.
-		BodyJSON interface{}
+		BodyJSON any
 		// BodyString is the response body.
 		// BodyJSON and BodyString should only be set to one or the other.
 		BodyString string
