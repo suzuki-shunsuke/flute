@@ -8,6 +8,7 @@ linters:
     - exhaustruct_v5
     - goconst
     - gocritic
+    - gomodguard
     - mnd
     - nlreturn
     - noinlineerr
